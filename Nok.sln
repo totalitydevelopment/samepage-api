@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nok.Api", "Nok.Api\Nok.Api.csproj", "{9726A945-13DE-4DE0-B57D-8B12FE522D61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nok.Api", "Nok.Api\Nok.Api.csproj", "{9726A945-13DE-4DE0-B57D-8B12FE522D61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nok.Infrastructure", "Nok.Infrastructure\Nok.Infrastructure.csproj", "{6DA990EB-8514-488D-B1F2-0167D873C84B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nok.Core", "Nok.Core\Nok.Core.csproj", "{106BFBCF-EA65-4A9A-97BB-0558214DE83C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{9726A945-13DE-4DE0-B57D-8B12FE522D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9726A945-13DE-4DE0-B57D-8B12FE522D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9726A945-13DE-4DE0-B57D-8B12FE522D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DA990EB-8514-488D-B1F2-0167D873C84B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DA990EB-8514-488D-B1F2-0167D873C84B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DA990EB-8514-488D-B1F2-0167D873C84B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DA990EB-8514-488D-B1F2-0167D873C84B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106BFBCF-EA65-4A9A-97BB-0558214DE83C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106BFBCF-EA65-4A9A-97BB-0558214DE83C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106BFBCF-EA65-4A9A-97BB-0558214DE83C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106BFBCF-EA65-4A9A-97BB-0558214DE83C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using Nok.Infrastructure.Data;
 
 namespace Nok.Api
 {
@@ -17,13 +18,32 @@ namespace Nok.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalDev",
+                    builder => builder.WithOrigins("http://localhost:4200") // Replace with your client app's URL
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
+
+            builder.Services.AddDbContext<DatabaseContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)); });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
             //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            //}
+
+         
+
+            //if (app.Environment.IsDevelopment())
+            //{
+                // Use CORS middleware in development environment
+                app.UseCors("AllowLocalDev");
             //}
 
             app.UseHttpsRedirection();
