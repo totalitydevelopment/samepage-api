@@ -6,3 +6,7 @@
 /Nok.Api/obj
 /.vs
 /Nok.Api/bin
+/Nok.Core/bin/Debug/net8.0
+/Nok.Core/obj
+/Nok.Infrastructure/bin/Debug/net8.0
+/Nok.Infrastructure/obj
