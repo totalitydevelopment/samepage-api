@@ -10,3 +10,5 @@
 /Nok.Core/obj
 /Nok.Infrastructure/bin/Debug/net8.0
 /Nok.Infrastructure/obj
+/Nok.Core/bin/Release/net8.0
+/Nok.Infrastructure/bin/Release/net8.0
