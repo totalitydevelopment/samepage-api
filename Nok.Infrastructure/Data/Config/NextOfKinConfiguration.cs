@@ -5,9 +5,9 @@ using Nok.Core.Aggregates.Register;
 
 namespace Nok.Infrastructure.Data.Config;
 
-public class MembersConfiguration : IEntityTypeConfiguration<Member>
+public class NextOfKinConfiguration : IEntityTypeConfiguration<NextOfKin>
 {
-    public void Configure(EntityTypeBuilder<Member> modelBuilder)
+    public void Configure(EntityTypeBuilder<NextOfKin> modelBuilder)
     {
         modelBuilder.OwnsOne(p => p.Name, p => {
             p.Property(pp => pp.Title).HasColumnName("Name_Title").IsRequired(false).HasMaxLength(DataSchemaConstants.DEFAULT_NAME_LENGTH);
@@ -31,21 +31,7 @@ public class MembersConfiguration : IEntityTypeConfiguration<Member>
             p.Property(pp => pp.Country).HasColumnName("Address_Country").HasMaxLength(10);
         });
 
-        modelBuilder.OwnsOne(builder => builder.DateOfBirth);
-
-        modelBuilder.OwnsOne(builder => builder.Vehicle, p =>
-        {
-            p.Property(pp => pp.RegistrationNumber).HasColumnName("Vehicle_Registration").HasMaxLength(20);
-            p.Property(pp => pp.Make).HasColumnName("Vehicle_Make").HasMaxLength(100);
-            p.Property(pp => pp.Model).HasColumnName("Vehicle_Model").HasMaxLength(100);
-            p.Property(pp => pp.Colour).HasColumnName("Vehicle_Colour").HasMaxLength(50);
-            p.Property(pp => pp.Notes).HasColumnName("Vehicle_Notes").HasMaxLength(1000);
-        });
-
-        modelBuilder.HasMany(e => e.NextOfKins).WithOne();
-
-        modelBuilder.Property(e => e.ImageUrl).HasMaxLength(50);
-        modelBuilder.Property(e => e.NationalInsuranceNumber).HasMaxLength(20);
+        modelBuilder.Property(e => e.Relationship).HasMaxLength(100);
 
         modelBuilder.HasKey(e => e.Id).IsClustered(false);
         modelBuilder.HasIndex(e => e.ClusterId).IsUnique().IsClustered();
@@ -53,6 +39,6 @@ public class MembersConfiguration : IEntityTypeConfiguration<Member>
         modelBuilder.Property(x => x.ClusterId).ValueGeneratedOnAdd();
         modelBuilder.Property(x => x.Id).ValueGeneratedNever();
 
-        modelBuilder.ToTable("Members", DatabaseSchemaNames.Member);
+        modelBuilder.ToTable("NextOfKins", DatabaseSchemaNames.Member);
     }
 }

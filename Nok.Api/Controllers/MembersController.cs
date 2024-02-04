@@ -48,9 +48,39 @@ public class MembersController : ControllerBase
             Id = member.Id,
             Name = new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname),
             Contact = member.Contact == null ? null : new ContactResponse(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber),
-            Vehicle = null
+            Vehicle = member.Vehicle == null ? null : new VehicleResponse(member.Vehicle.RegistrationNumber, member.Vehicle.Make, member.Vehicle.Model, member.Vehicle.Colour, member.Vehicle.Notes)
         };
     }
+
+    //[HttpGet()]
+    //public ActionResult<IEnumerable<GetMemberListItem>> GetList([FromQuery] string? searchTerm = null)
+    //{
+    //    IEnumerable<Member> members = _databaseContext.Members;
+
+    //    if (!string.IsNullOrWhiteSpace(searchTerm))
+    //    {
+    //        members = members.Where(u => u.Name.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || u.Name.Surname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+    //    }
+
+    //    return members.Select(u => new GetMemberListItem
+    //    {
+    //        Id = u.Id,
+    //        Name = new NameResponse(u.Name.Title, u.Name.FirstName, u.Name.MiddleName, u.Name.Surname),
+    //       DateOfBirth = new DateOfBirthResponse(u.DateOfBirth.Year, u.DateOfBirth.Month, u.DateOfBirth.Day),
+
+    //       // DateOfBirth = u.DateOfBirth,
+    //        KnownTown = u.Address?.Town,
+    //        HasImage = u.HasImage
+    //    });
+
+    //    //return members.Select(m => new GetMemberListItem
+    //    //{
+    //    //    Id = m.Id,
+    //    //    Name = new NameResponse(m.Name.Title, m.Name.FirstName, m.Name.MiddleName, m.Name.Surname),
+    //    //    DateOfBirth = m.DateOfBirth
+    //    //}).ToList();
+
+    //}
 
     [HttpPut("{id}")]
     public ActionResult Put(Guid id, [FromBody] CreateMemberRequest updatedMember)

@@ -55,7 +55,17 @@ public class GetMemberResponse: BaseIdResponse
     required public VehicleResponse? Vehicle { get; init; }
 }
 
-public record NameResponse(string Title, string FirstName, string MiddleName, string LastName);
+public class GetMemberListItem
+{
+    required public Guid Id { get; init; }
+    required public NameResponse Name { get; init; }
+    required public DateOfBirthResponse? DateOfBirth { get; init; }
+    required public string? KnownTown { get; init; }
+    required public bool HasImage { get; init; }
+}
+
+public record NameResponse(string? Title, string FirstName, string? MiddleName, string LastName);
 public record ContactResponse(string Email, string HomeNumber, string WorkNumber, string MobileNumber);
-public record VehicleResponse(string RegistrationNumber, string Make, string Model);
+public record VehicleResponse(string RegistrationNumber, string Make, string? Model, string? Colour, string? Notes);
+public record DateOfBirthResponse(int Year, int? Month, int? Day);
 

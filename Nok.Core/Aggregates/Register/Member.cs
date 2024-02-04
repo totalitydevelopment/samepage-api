@@ -3,14 +3,18 @@ using Nok.Core.Extensions;
 
 namespace Nok.Core.Aggregates.Register;
 
-public class Member : GuidDataEntity, IAggregateRoot
+public class Person : GuidDataEntity
 {
-    private Member()
+    public Name Name { get; protected set; }
+    public ContactDetails? Contact { get; protected set; }
+    public Address? Address { get; protected set; }
+
+    protected Person()
     {
         // Required by EF
     }
 
-    public Member(Guid id, Name name)
+    public Person(Guid id, Name name)
     {
         Id = id;
         Name = name;
@@ -21,23 +25,57 @@ public class Member : GuidDataEntity, IAggregateRoot
         UpdatedDate = SystemTime.UtcNow();
     }
 
-    public Name Name { get; private set; }
-    public ContactDetails? Contact { get; private set; }
-    public DateOfBirth? DateOfBirth { get; private set; }
-
     public void SetContactDetails(ContactDetails contactDetails)
     {
         Contact = contactDetails;
     }
+
+    public void SetAddress(Address address)
+    {
+        Address = address;
+    }
+}
+
+public class Member : Person, IAggregateRoot
+{
+    private List<NextOfKin> _nextOfKins = [];
+
+    private Member()
+    {
+        // Required by EF
+    }
+
+    public Member(Guid id, Name name): base(id, name)
+    {
+        _nextOfKins = [];
+    }
+
+   
+    public DateOfBirth? DateOfBirth { get; private set; }
+    public Vehicle? Vehicle { get; private set; }
+    public bool HasImage => !string.IsNullOrWhiteSpace(ImageUrl);
+    public string? ImageUrl { get; private set; }
+    public string? NationalInsuranceNumber { get; private set; }
+
+    public IReadOnlyList<NextOfKin> NextOfKins => _nextOfKins.AsReadOnly();
 
     public void SetDateOfBirth(DateOfBirth dateOfBirth)
     {
         DateOfBirth = dateOfBirth;
     }
 
+    public void SetVehicle(Vehicle vehicle)
+    {
+        Vehicle = vehicle;
+    }
+
+    public void SetNextOfKin(NextOfKin nextOfKin)
+    {
+        _nextOfKins.Add(nextOfKin);
+    }
+
     public void SetContactEmail(string email)
     {
-
         if (Contact == null)
         {
             Contact = new ContactDetails(email, string.Empty, string.Empty, string.Empty);
@@ -49,28 +87,79 @@ public class Member : GuidDataEntity, IAggregateRoot
     }
 }
 
+public class NextOfKin : Person
+{
+    private NextOfKin()
+    {
+        // Required by EF
+    }
+
+    public NextOfKin(Guid id, Name name, ContactDetails contactDetails, string relationship) : base(id, name)
+    {
+        Relationship = relationship;
+        Contact = contactDetails;
+    }
+
+    public string Relationship { get; init; }
+}
+
+public class Address : ValueObject
+{
+    public string Address1 { get; private set; } = string.Empty;
+    public string? Address2 { get; private set; } = string.Empty;
+    public string Town { get; private set; } = string.Empty;
+    public string Postcode { get; private set; } = string.Empty;
+    public string? Country { get; private set; } = string.Empty;
+
+    public Address(string address1, string? address2, string town, string postcode, string? country)
+    {
+        Address1 = address1;
+        Address2 = address2;
+        Town = town;
+        Postcode = postcode;
+        Country = country;
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Address1;
+        yield return Address2 ?? string.Empty;
+        yield return Town;
+        yield return Postcode;
+        yield return Country ?? string.Empty;
+    }
+}
 
 public class DateOfBirth : ValueObject
 {
-    public DateTime Value { get; private set; }
+    public int Year { get; private set; }
+    public int? Month { get; private set; }
+    public int? Day { get; private set; }
 
-    public DateOfBirth(DateTime value)
+    public DateOfBirth(int year, int? month, int? day)
     {
-        if (value > SystemTime.UtcNow())
-        {
-            throw new ArgumentException("Date of birth cannot be in the future", nameof(value));
-        }
-
-        Value = value;
+        Year = year;
+        Month = month;
+        Day = day;
     }
 
-    public int Age
+    // add age calculation if we know the date of birth
+    public int? Age
     {
         get
         {
-            var age = DateTime.UtcNow.Year - Value.Year;
+            if (Year == 0)
+            {
+                return null;
+            }
 
-            if (DateTime.UtcNow < Value.AddYears(age)) age--;
+            var today = DateTime.Today;
+            var age = today.Year - Year;
+
+            if (Month > today.Month || (Month == today.Month && Day > today.Day))
+            {
+                age--;
+            }
 
             return age;
         }
@@ -78,7 +167,9 @@ public class DateOfBirth : ValueObject
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Value;
+        yield return Year;
+        yield return Month ?? 0;
+        yield return Day ?? 0;
     }
 }
 
@@ -86,21 +177,28 @@ public class Vehicle : ValueObject
 {
     public string RegistrationNumber { get; private set; } = string.Empty;
     public string Make { get; private set; } = string.Empty;
-    public string Model { get; private set; } = string.Empty;
+    public string? Model { get; private set; } = string.Empty;
+    public string? Colour { get; private set; } = string.Empty;
+    public string? Notes{ get; private set; } = string.Empty;
 
-    public Vehicle(string registrationNumber, string make, string model)
+    public Vehicle(string registrationNumber, string make, string? model, string? colour, string? notes)
     {
         RegistrationNumber = registrationNumber;
         Make = make;
         Model = model;
+        Colour = colour;
+        Notes = notes;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return RegistrationNumber;
         yield return Make;
-        yield return Model;
+        yield return Model ?? string.Empty;
+        yield return Colour ?? string.Empty;
+        yield return Notes ?? string.Empty;
     }
+
 }
 
 public class Name : ValueObject
