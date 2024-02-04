@@ -2,37 +2,6 @@
 
 namespace Nok.Api.Controllers;
 
-//public class Address
-//{
-//    required public string Address1 { get; init; }
-//    public string? Address2 { get; init; }
-//    required public string Town { get; init; }
-//    required public string Postcode { get; init; }
-//    public string? Country { get; init; }
-//}
-
-//public class User : Person
-//{
-//    public bool HasImage { get; init; }
-//    public string? ImageUrl { get; init; }
-//    required public NextOfKin NextOfKin { get; init; }
-//    public string? NationalInsuranceNumber { get; init; }
-//    public Vehicle? Vehicle { get; init; }
-//}
-
-//public class Vehicle
-//{
-//    required public string Registration { get; init; }
-//    public string? Make { get; init; }
-//    public string? Model { get; init; }
-//    public string? Colour { get; init; }
-//    public string? Notes { get; init; }
-//}
-
-//public class NextOfKin : Person
-//{
-//    required public string Relationship { get; init; }
-//}
 public class CreateMemberRequest
 {
     public string? Title { get; init; }
@@ -50,9 +19,12 @@ public class BaseIdResponse
 
 public class GetMemberResponse: BaseIdResponse
 {
+    required public string? ImageUrl { get; init; }
     required public NameResponse Name { get; init; }
     required public ContactResponse? Contact { get; init; }
     required public VehicleResponse? Vehicle { get; init; }
+    required public DateOfBirthResponse? DateOfBirth { get; init; }
+    required public bool HasImage { get; init; }
 }
 
 public class GetMemberListItem
