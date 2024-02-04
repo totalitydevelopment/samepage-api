@@ -25,6 +25,7 @@ public class GetMemberResponse: BaseIdResponse
     required public VehicleResponse? Vehicle { get; init; }
     required public DateOfBirthResponse? DateOfBirth { get; init; }
     required public bool HasImage { get; init; }
+    public List<NextOfKinResponse> NextOfKins { get; internal set; }
 }
 
 public class GetMemberListItem
@@ -40,4 +41,6 @@ public record NameResponse(string? Title, string FirstName, string? MiddleName, 
 public record ContactResponse(string Email, string HomeNumber, string WorkNumber, string MobileNumber);
 public record VehicleResponse(string RegistrationNumber, string Make, string? Model, string? Colour, string? Notes);
 public record DateOfBirthResponse(int Year, int? Month, int? Day);
+
+public record NextOfKinResponse(Guid Id, NameResponse Name, ContactResponse Contact, string Relationship);
 
