@@ -55,7 +55,7 @@ public class MembersController : ControllerBase
             HasImage = member.HasImage,
             DateOfBirth = member.DateOfBirth == null ? null : new DateOfBirthResponse(member.DateOfBirth.Year, member.DateOfBirth.Month, member.DateOfBirth.Day),
             NextOfKins = member.NextOfKins.Select(member => new NextOfKinResponse(member.Id, new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname), new ContactResponse(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber), member.Relationship)).ToList(), 
-            ImageUrl = member.ImageUrl
+            ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
         };
     }
 
