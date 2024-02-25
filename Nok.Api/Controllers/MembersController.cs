@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
 
@@ -36,7 +37,9 @@ public class MembersController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<GetMemberResponse> Get(Guid id)
     {
-        var member = _databaseContext.Members.Find(id);
+        var member = _databaseContext.Members
+            .Include(x => x.NextOfKins)
+            .FirstOrDefault(x=>x.Id==id);
 
         if (member == null)
         {
@@ -51,7 +54,8 @@ public class MembersController : ControllerBase
             Vehicle = member.Vehicle == null ? null : new VehicleResponse(member.Vehicle.RegistrationNumber, member.Vehicle.Make, member.Vehicle.Model, member.Vehicle.Colour, member.Vehicle.Notes),
             HasImage = member.HasImage,
             DateOfBirth = member.DateOfBirth == null ? null : new DateOfBirthResponse(member.DateOfBirth.Year, member.DateOfBirth.Month, member.DateOfBirth.Day),
-            ImageUrl = member.ImageUrl
+            NextOfKins = member.NextOfKins.Select(member => new NextOfKinResponse(member.Id, new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname), new ContactResponse(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber), member.Relationship)).ToList(), 
+            ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
         };
     }
 
