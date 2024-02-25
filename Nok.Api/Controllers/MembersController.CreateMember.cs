@@ -1,6 +1,4 @@
-﻿using Ardalis.SharedKernel;
-
-namespace Nok.Api.Controllers;
+﻿namespace Nok.Api.Controllers;
 
 public class CreateMemberRequest
 {
@@ -17,7 +15,7 @@ public class BaseIdResponse
     required public Guid Id { get; init; }
 }
 
-public class GetMemberResponse: BaseIdResponse
+public class GetMemberResponse : BaseIdResponse
 {
     required public string? ImageUrl { get; init; }
     required public NameResponse Name { get; init; }
@@ -25,6 +23,12 @@ public class GetMemberResponse: BaseIdResponse
     required public VehicleResponse? Vehicle { get; init; }
     required public DateOfBirthResponse? DateOfBirth { get; init; }
     required public bool HasImage { get; init; }
+}
+
+public class GetNokResponse : BaseIdResponse
+{
+    required public string? Relationship { get; init; }
+    required public NameResponse Name { get; init; }
 }
 
 public class GetMemberListItem
