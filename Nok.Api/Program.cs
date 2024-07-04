@@ -38,12 +38,12 @@ namespace Nok.Api
             app.UseSwaggerUI();
             //}
 
-         
+
 
             //if (app.Environment.IsDevelopment())
             //{
-                // Use CORS middleware in development environment
-                app.UseCors("AllowLocalDev");
+            // Use CORS middleware in development environment
+            app.UseCors("AllowLocalDev");
             //}
 
             app.UseHttpsRedirection();

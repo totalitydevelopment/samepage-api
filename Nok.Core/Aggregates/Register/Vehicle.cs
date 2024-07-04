@@ -8,7 +8,7 @@ public class Vehicle : ValueObject
     public string Make { get; private set; } = string.Empty;
     public string? Model { get; private set; } = string.Empty;
     public string? Colour { get; private set; } = string.Empty;
-    public string? Notes{ get; private set; } = string.Empty;
+    public string? Notes { get; private set; } = string.Empty;
 
     public Vehicle(string registrationNumber, string make, string? model, string? colour, string? notes)
     {

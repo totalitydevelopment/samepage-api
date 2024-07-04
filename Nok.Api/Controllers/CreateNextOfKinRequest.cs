@@ -1,6 +1,6 @@
 ﻿namespace Nok.Api.Controllers;
 
-public class CreateNextOfKinRequest: CreatePersonBaseRequest
+public class CreateNextOfKinRequest : CreatePersonBaseRequest
 {
     public string Relationship { get; init; } = string.Empty;
 }
