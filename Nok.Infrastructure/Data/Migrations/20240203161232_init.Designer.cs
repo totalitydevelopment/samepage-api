@@ -9,155 +9,154 @@ using Nok.Infrastructure.Data;
 
 #nullable disable
 
-namespace Nok.Infrastructure.Data.Migrations
+namespace Nok.Infrastructure.Data.Migrations;
+
+[DbContext(typeof(DatabaseContext))]
+[Migration("20240203161232_init")]
+partial class init
 {
-    [DbContext(typeof(DatabaseContext))]
-    [Migration("20240203161232_init")]
-    partial class init
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.1")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Nok.Core.Aggregates.Register.Member", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("Nok.Core.Aggregates.Register.Member", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("ClusterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.Property<long>("ClusterId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ClusterId"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ClusterId"));
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("CreatedDate")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("UpdatedBy")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("UpdatedDate")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("UpdatedDate")
+                    .HasColumnType("datetimeoffset");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+                SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
-                    b.HasIndex("ClusterId")
-                        .IsUnique();
+                b.HasIndex("ClusterId")
+                    .IsUnique();
 
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
+                SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
-                    b.ToTable("Members", "Member");
-                });
+                b.ToTable("Members", "Member");
+            });
 
-            modelBuilder.Entity("Nok.Core.Aggregates.Register.Member", b =>
-                {
-                    b.OwnsOne("Nok.Core.Aggregates.Register.ContactDetails", "Contact", b1 =>
-                        {
-                            b1.Property<Guid>("MemberId")
-                                .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("Nok.Core.Aggregates.Register.Member", b =>
+            {
+                b.OwnsOne("Nok.Core.Aggregates.Register.ContactDetails", "Contact", b1 =>
+                    {
+                        b1.Property<Guid>("MemberId")
+                            .HasColumnType("uniqueidentifier");
 
-                            b1.Property<string>("Email")
-                                .IsRequired()
-                                .HasMaxLength(400)
-                                .HasColumnType("nvarchar(400)")
-                                .HasColumnName("Contact_Email");
+                        b1.Property<string>("Email")
+                            .IsRequired()
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)")
+                            .HasColumnName("Contact_Email");
 
-                            b1.Property<string>("HomeNumber")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("Contact_HomeNumber");
+                        b1.Property<string>("HomeNumber")
+                            .IsRequired()
+                            .HasMaxLength(20)
+                            .HasColumnType("nvarchar(20)")
+                            .HasColumnName("Contact_HomeNumber");
 
-                            b1.Property<string>("MobileNumber")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("Contact_MobileNumber");
+                        b1.Property<string>("MobileNumber")
+                            .IsRequired()
+                            .HasMaxLength(20)
+                            .HasColumnType("nvarchar(20)")
+                            .HasColumnName("Contact_MobileNumber");
 
-                            b1.Property<string>("WorkNumber")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("Contact_WorkNumber");
+                        b1.Property<string>("WorkNumber")
+                            .IsRequired()
+                            .HasMaxLength(20)
+                            .HasColumnType("nvarchar(20)")
+                            .HasColumnName("Contact_WorkNumber");
 
-                            b1.HasKey("MemberId");
+                        b1.HasKey("MemberId");
 
-                            b1.ToTable("Members", "Member");
+                        b1.ToTable("Members", "Member");
 
-                            b1.WithOwner()
-                                .HasForeignKey("MemberId");
-                        });
+                        b1.WithOwner()
+                            .HasForeignKey("MemberId");
+                    });
 
-                    b.OwnsOne("Nok.Core.Aggregates.Register.DateOfBirth", "DateOfBirth", b1 =>
-                        {
-                            b1.Property<Guid>("MemberId")
-                                .HasColumnType("uniqueidentifier");
+                b.OwnsOne("Nok.Core.Aggregates.Register.DateOfBirth", "DateOfBirth", b1 =>
+                    {
+                        b1.Property<Guid>("MemberId")
+                            .HasColumnType("uniqueidentifier");
 
-                            b1.Property<DateTime>("Value")
-                                .HasColumnType("datetime2");
+                        b1.Property<DateTime>("Value")
+                            .HasColumnType("datetime2");
 
-                            b1.HasKey("MemberId");
+                        b1.HasKey("MemberId");
 
-                            b1.ToTable("Members", "Member");
+                        b1.ToTable("Members", "Member");
 
-                            b1.WithOwner()
-                                .HasForeignKey("MemberId");
-                        });
+                        b1.WithOwner()
+                            .HasForeignKey("MemberId");
+                    });
 
-                    b.OwnsOne("Nok.Core.Aggregates.Register.Name", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("MemberId")
-                                .HasColumnType("uniqueidentifier");
+                b.OwnsOne("Nok.Core.Aggregates.Register.Name", "Name", b1 =>
+                    {
+                        b1.Property<Guid>("MemberId")
+                            .HasColumnType("uniqueidentifier");
 
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name_FirstName");
+                        b1.Property<string>("FirstName")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("nvarchar(100)")
+                            .HasColumnName("Name_FirstName");
 
-                            b1.Property<string>("MiddleName")
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name_MiddleName");
+                        b1.Property<string>("MiddleName")
+                            .HasMaxLength(100)
+                            .HasColumnType("nvarchar(100)")
+                            .HasColumnName("Name_MiddleName");
 
-                            b1.Property<string>("Surname")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name_Surname");
+                        b1.Property<string>("Surname")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("nvarchar(100)")
+                            .HasColumnName("Name_Surname");
 
-                            b1.Property<string>("Title")
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name_Title");
+                        b1.Property<string>("Title")
+                            .HasMaxLength(100)
+                            .HasColumnType("nvarchar(100)")
+                            .HasColumnName("Name_Title");
 
-                            b1.HasKey("MemberId");
+                        b1.HasKey("MemberId");
 
-                            b1.ToTable("Members", "Member");
+                        b1.ToTable("Members", "Member");
 
-                            b1.WithOwner()
-                                .HasForeignKey("MemberId");
-                        });
+                        b1.WithOwner()
+                            .HasForeignKey("MemberId");
+                    });
 
-                    b.Navigation("Contact");
+                b.Navigation("Contact");
 
-                    b.Navigation("DateOfBirth");
+                b.Navigation("DateOfBirth");
 
-                    b.Navigation("Name")
-                        .IsRequired();
-                });
+                b.Navigation("Name")
+                    .IsRequired();
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

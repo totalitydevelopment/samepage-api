@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Nok.Core.Events;
+﻿using Nok.Core.Events;
 using Nok.Core.Extensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nok.Core.Aggregates;
 
