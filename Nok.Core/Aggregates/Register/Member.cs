@@ -11,12 +11,12 @@ public class Member : Person, IAggregateRoot
         // Required by EF
     }
 
-    public Member(Guid id, Name name): base(id, name)
+    public Member(Guid id, Name name) : base(id, name)
     {
         _nextOfKins = [];
     }
 
-   
+
     public DateOfBirth? DateOfBirth { get; private set; }
     public Vehicle? Vehicle { get; private set; }
     public bool HasImage => !string.IsNullOrWhiteSpace(ImageUrl);

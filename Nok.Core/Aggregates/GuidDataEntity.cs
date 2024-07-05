@@ -2,5 +2,5 @@
 
 public abstract class GuidDataEntity : BaseEntity<Guid>
 {
-   
+
 }
