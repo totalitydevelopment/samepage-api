@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
 
 namespace Nok.Api.Controllers;
 
 [ApiController]
+[Authorize]
+[RequiredScope("read")]
 [Route("members")]
 public class MembersController : ControllerBase
 {
