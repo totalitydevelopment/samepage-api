@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Nok.Core.Aggregates.Register;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Test.Database.Seeder;
@@ -20,7 +19,7 @@ public class SeedController : ControllerBase
     [HttpPost()]
     public ActionResult Post()
     {
-        if(!EnvironmentExtensions.IsLocalOrDev)
+        if (!EnvironmentExtensions.IsLocalOrDev)
         {
             return BadRequest();
         }
