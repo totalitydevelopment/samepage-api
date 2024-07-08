@@ -6,7 +6,7 @@ namespace Nok.Core.Aggregates;
 
 public abstract class BaseEntity<TId> : BaseAudit, IBaseEntity
 {
-    private List<DomainEventBase> _domainEvents = new();
+    private readonly List<DomainEventBase> _domainEvents = [];
 
     public long ClusterId { get; private set; }
 

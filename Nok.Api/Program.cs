@@ -27,7 +27,12 @@ public class Program
                                   .AllowAnyMethod());
         });
 
-        builder.Services.AddDbContext<DatabaseContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)); });
+        builder.Services.AddDbContext<DatabaseContext>(options =>
+        {
+            options.UseSqlServer(
+                builder.Configuration.GetConnectionString("SqlConnection"),
+                b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
+        });
 
         var app = builder.Build();
 

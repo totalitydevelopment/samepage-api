@@ -27,7 +27,7 @@ public class MembersConfiguration : IEntityTypeConfiguration<Member>
 
         modelBuilder.OwnsOne(p => p.Address, p =>
         {
-            p.Property(pp => pp.Address1).HasColumnName("Address_Address1").HasMaxLength(200);
+            p.Property(pp => pp.Address1).HasColumnName("Address_Address1").HasMaxLength(200);  
             p.Property(pp => pp.Address2).HasColumnName("Address_Address2").HasMaxLength(100);
             p.Property(pp => pp.Town).HasColumnName("Address_City").HasMaxLength(200);
             p.Property(pp => pp.Postcode).HasColumnName("Address_Town").HasMaxLength(200);

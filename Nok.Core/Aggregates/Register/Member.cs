@@ -4,9 +4,9 @@ namespace Nok.Core.Aggregates.Register;
 
 public class Member : Person, IAggregateRoot
 {
-    private List<NextOfKin> _nextOfKins = [];
+    private readonly List<NextOfKin> _nextOfKins = [];
 
-    private Member()
+    public Member()
     {
         // Required by EF
     }
@@ -15,7 +15,6 @@ public class Member : Person, IAggregateRoot
     {
         _nextOfKins = [];
     }
-
 
     public DateOfBirth? DateOfBirth { get; private set; }
     public Vehicle? Vehicle { get; private set; }
@@ -42,7 +41,7 @@ public class Member : Person, IAggregateRoot
 
     public void SetContactEmail(string email)
     {
-        if (Contact == null)
+        if (Contact is null)
         {
             Contact = new ContactDetails(email, string.Empty, string.Empty, string.Empty);
 
