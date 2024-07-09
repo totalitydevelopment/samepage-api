@@ -24,16 +24,10 @@ public class SeedController : ControllerBase
             return BadRequest();
         }
 
-        //check if the user below exists and add if not
-        var member = _databaseContext.Members.Find(new Guid("5B9FC753-DE88-4B40-B36C-EFC76464FC71"));
+        var seedDataGenerator = new SeedDataGenerator();
 
-        if (member == null)
-        {
-            var seedDataGenerator = new SeedDataGenerator();
-
-            _databaseContext.Members.AddRange(seedDataGenerator.Members);
-            _databaseContext.SaveChanges();
-        }
+        _databaseContext.Members.AddRange(seedDataGenerator.Members);
+        _databaseContext.SaveChanges();
 
         return Ok();
     }
