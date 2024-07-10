@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Nok.Infrastructure.Test.Database.Seeder": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      },
+      "applicationUrl": "https://localhost:63369;http://localhost:63370"
+    }
+  }
+}
