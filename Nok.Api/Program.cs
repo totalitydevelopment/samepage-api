@@ -19,6 +19,30 @@ public class Program
             {
                 builder.Configuration.Bind("AzureAdB2C", options);
                 options.TokenValidationParameters.NameClaimType = "name";
+
+                // TODO debug, remove
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = async ctx =>
+                    {
+
+                    },
+
+                    OnTokenValidated = async ctx =>
+                    {
+
+                    },
+
+                    OnForbidden = async ctx =>
+                    {
+
+                    },
+
+                    OnAuthenticationFailed = async ctx =>
+                    {
+                        var exceptionMessage = ctx.Exception;
+                    },
+                };
             },
             options =>
             {
@@ -32,6 +56,18 @@ public class Program
         builder.Services.AddSwaggerGen(opt =>
         {
             opt.SwaggerDoc("v1", new OpenApiInfo { Title = "nok", Version = "v1" });
+
+            opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
             opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 Description = "OAuth2.0 Auth Code with PKCE",
@@ -45,11 +81,12 @@ public class Program
                         TokenUrl = new Uri(builder.Configuration["Swagger:TokenUrl"]!),
                         Scopes = new Dictionary<string, string>
                         {
-                            [builder.Configuration["Swagger:ApiScope"]!] = "read the api"
+                            [builder.Configuration["Swagger:ApiScope"]!] = "read the api",
                         }
                     }
                 }
             });
+
             opt.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -58,6 +95,25 @@ public class Program
                         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
                     },
                     new[] { builder.Configuration["Swagger:ApiScope"] }
+                }
+            });
+
+            opt.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
+
+                    },
+                    new List<string>()
                 }
             });
         });
@@ -90,6 +146,7 @@ public class Program
             c.OAuthClientId(builder.Configuration["Swagger:OpenIdClientId"]);
             c.OAuthUsePkce();
             c.OAuthScopeSeparator(" ");
+            c.DisplayRequestDuration();
         });
         //}
 
@@ -103,7 +160,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthentication();
-        app.UseAuthorization();
+        // app.UseAuthorization();
 
 
         app.MapControllers();

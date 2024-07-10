@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nok.Core.Aggregates.Register;
@@ -6,6 +7,7 @@ using Nok.Infrastructure.Data;
 namespace Nok.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("members/{memberId}/next-of-kins")]
 public class NextOfKinsController : ControllerBase
 {
