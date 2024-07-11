@@ -8,8 +8,6 @@ namespace Nok.Api.Controllers;
 
 [ApiController]
 [Authorize]
-//[RequiredScope("read")]
-//[Authorize(Roles = "members.read")]
 [Route("members")]
 public class MembersController : ControllerBase
 {

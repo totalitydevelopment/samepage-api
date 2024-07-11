@@ -33,5 +33,4 @@ public class SeedController : ControllerBase
 
         return Ok();
     }
-
 }

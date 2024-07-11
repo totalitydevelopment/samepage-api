@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
-
 
 namespace Nok.Api;
 
@@ -19,30 +19,6 @@ public class Program
             {
                 builder.Configuration.Bind("AzureAdB2C", options);
                 options.TokenValidationParameters.NameClaimType = "name";
-
-                // TODO debug, remove
-                options.Events = new JwtBearerEvents
-                {
-                    OnChallenge = async ctx =>
-                    {
-
-                    },
-
-                    OnTokenValidated = async ctx =>
-                    {
-
-                    },
-
-                    OnForbidden = async ctx =>
-                    {
-
-                    },
-
-                    OnAuthenticationFailed = async ctx =>
-                    {
-                        var exceptionMessage = ctx.Exception;
-                    },
-                };
             },
             options =>
             {
@@ -53,15 +29,47 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
 
+        ConfigureOpenApiGeneration(builder);
+
+        // Add CORS services
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalDev",
+                builder => builder.WithOrigins("http://localhost:4200") // Replace with your client app's URL
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod());
+        });
+
+        builder.Services.AddDbContext<DatabaseContext>(options =>
+        {
+            options.UseSqlServer(
+                builder.Configuration.GetConnectionString("SqlConnection"),
+                b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
+        });
+
+        var app = builder.Build();
+
+        ConfigureSwaggerUi(builder, app);
+        app.UseCors("AllowLocalDev");
+        app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+
+        app.Run();
+    }
+
+    private static void ConfigureOpenApiGeneration(WebApplicationBuilder builder)
+    {
         builder.Services.AddSwaggerGen(opt =>
         {
             opt.SwaggerDoc("v1", new OpenApiInfo { Title = "nok", Version = "v1" });
 
             opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                Description = @"JWT Authorization header using the Bearer scheme. <br /> 
+                      Enter 'Bearer' [space] and then your token in the text input below. <br /> 
+                      Example: 'Bearer 12345abcdef'",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
@@ -111,60 +119,26 @@ public class Program
                         Scheme = "oauth2",
                         Name = "Bearer",
                         In = ParameterLocation.Header,
-
                     },
                     new List<string>()
                 }
             });
         });
+    }
 
-        // Add CORS services
-        builder.Services.AddCors(options =>
+    private static void ConfigureSwaggerUi(WebApplicationBuilder builder, WebApplication app)
+    {
+        if (EnvironmentExtensions.IsLocalOrDev)
         {
-            options.AddPolicy("AllowLocalDev",
-                builder => builder.WithOrigins("http://localhost:4200") // Replace with your client app's URL
-                                  .AllowAnyHeader()
-                                  .AllowAnyMethod());
-        });
-
-        builder.Services.AddDbContext<DatabaseContext>(options =>
-        {
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("SqlConnection"),
-                b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
-        });
-
-        var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        //if (app.Environment.IsDevelopment())
-        //{
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "nok v1");
-            c.OAuthClientId(builder.Configuration["Swagger:OpenIdClientId"]);
-            c.OAuthUsePkce();
-            c.OAuthScopeSeparator(" ");
-            c.DisplayRequestDuration();
-        });
-        //}
-
-
-
-        //if (app.Environment.IsDevelopment())
-        //{
-        // Use CORS middleware in development environment
-        app.UseCors("AllowLocalDev");
-        //}
-
-        app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-
-        app.MapControllers();
-
-        app.Run();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "nok v1");
+                c.OAuthClientId(builder.Configuration["Swagger:OpenIdClientId"]);
+                c.OAuthUsePkce();
+                c.OAuthScopeSeparator(" ");
+                c.DisplayRequestDuration();
+            });
+        }
     }
 }
