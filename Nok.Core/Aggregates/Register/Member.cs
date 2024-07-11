@@ -1,12 +1,10 @@
-﻿using Ardalis.SharedKernel;
+﻿namespace Nok.Core.Aggregates.Register;
 
-namespace Nok.Core.Aggregates.Register;
-
-public class Member : Person, IAggregateRoot
+public class Member : Person
 {
     private readonly List<NextOfKin> _nextOfKins = [];
 
-    public Member()
+    private Member()
     {
         // Required by EF
     }
