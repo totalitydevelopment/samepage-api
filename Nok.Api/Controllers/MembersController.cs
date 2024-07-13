@@ -8,7 +8,7 @@ using Nok.Infrastructure.Data;
 namespace Nok.Api.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("members")]
 public class MembersController : ControllerBase
 {
