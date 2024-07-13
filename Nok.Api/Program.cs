@@ -4,6 +4,11 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Nok.Api.Models;
+using FluentValidation.AspNetCore;
 
 namespace Nok.Api;
 
@@ -45,6 +50,37 @@ public class Program
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("SqlConnection"),
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
+        });
+
+
+        builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
+        builder.Services.AddFluentValidationAutoValidation();
+
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.HttpContext.Response.ContentType = "application/json";
+                var errorsInModelState = context.ModelState
+                       .Where(x => x.Value.Errors.Count > 0)
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Errors.Select(x => x.ErrorMessage).ToArray());
+
+                var errors = new List<string>();
+                foreach (var error in errorsInModelState)
+                {
+                    foreach (var subError in error.Value)
+                    {
+                        errors.Add($"Key: '{error.Key}', message : {subError}");
+                    }
+                }
+                var errorResponse = new BaseValidationErrors()
+                {
+                    Message = "Validation errors",
+                    ValidationErrors = errors
+                };
+                return new BadRequestObjectResult(errorResponse);
+            };
         });
 
         var app = builder.Build();

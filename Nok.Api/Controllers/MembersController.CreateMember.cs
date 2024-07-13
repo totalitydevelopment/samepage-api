@@ -1,6 +1,8 @@
-﻿namespace Nok.Api.Controllers;
+﻿using Nok.Api.Validators;
 
-public class CreateMemberRequest
+namespace Nok.Api.Controllers;
+
+public class CreateMemberRequest : BaseValidationModel<CreateMemberRequest>
 {
     public string? Title { get; init; }
     public string FirstName { get; init; } = string.Empty;
