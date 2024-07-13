@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8C98659D-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nok.Infrastructure.Test.Database.Seeder", "Nok.Infrastructure.Test.Database.Seeder\Nok.Infrastructure.Test.Database.Seeder.csproj", "{77A2DCAD-7281-4F9C-8E87-61A715E2B955}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nok.Api.Tests", "Nok.Api.Tests\Nok.Api.Tests.csproj", "{46BC99EB-E1CC-4C3E-8002-989ABD77B7EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{77A2DCAD-7281-4F9C-8E87-61A715E2B955}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A2DCAD-7281-4F9C-8E87-61A715E2B955}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A2DCAD-7281-4F9C-8E87-61A715E2B955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46BC99EB-E1CC-4C3E-8002-989ABD77B7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46BC99EB-E1CC-4C3E-8002-989ABD77B7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46BC99EB-E1CC-4C3E-8002-989ABD77B7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46BC99EB-E1CC-4C3E-8002-989ABD77B7EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

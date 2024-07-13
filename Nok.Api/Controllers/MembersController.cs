@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nok.Api.Validators;
 using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
 
@@ -21,6 +22,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpPost()]
+    [ModelValidator]
     public ActionResult<Guid> Post([FromBody] CreateMemberRequest newMember)
     {
         var member = new Member(Guid.NewGuid(), new Name(newMember.Title, newMember.FirstName, newMember.MiddleName, newMember.LastName));
