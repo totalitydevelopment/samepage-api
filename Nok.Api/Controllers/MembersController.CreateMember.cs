@@ -34,7 +34,7 @@ public class GetNokResponse : BaseIdResponse
     required public NameResponse Name { get; init; }
 }
 
-public class GetMemberListItem
+public class GetMemberListItemResponse
 {
     required public Guid Id { get; init; }
     required public NameResponse Name { get; init; }
