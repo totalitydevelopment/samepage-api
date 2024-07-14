@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Nok.Api.Models;
 using FluentValidation.AspNetCore;
+using Nok.Core.Interfaces;
+
+using Nok.Infrastructure.Services;
 
 namespace Nok.Api;
 
@@ -16,7 +19,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         // Adds Microsoft Identity platform (Azure AD B2C) support to protect this Api
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -33,6 +36,8 @@ public class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddScoped<IMembersService, MembersService>();// TODO this will live in a module in infra proj
 
         ConfigureOpenApiGeneration(builder);
 
@@ -52,6 +57,7 @@ public class Program
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
 
+        builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(ApiProject)); });
 
         builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
         builder.Services.AddFluentValidationAutoValidation();
