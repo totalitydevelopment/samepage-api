@@ -32,7 +32,6 @@ public class NextOfKinsController : ControllerBase
 
         var nextOfKin = new NextOfKin()
         {
-            //Id = Guid.NewGuid(),
             Name = newNok.Name,
             ContactDetails = newNok.ContactDetails,
             Address = newNok.Address,

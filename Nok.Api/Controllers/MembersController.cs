@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Data.Models;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace Nok.Api.Controllers;
 
@@ -13,19 +15,23 @@ public class MembersController : ControllerBase
 {
     private readonly ILogger<MembersController> _logger;
     private readonly DatabaseContext _databaseContext;
+    private readonly IAccessIdentifierService _accessIdentityService;
 
-    public MembersController(ILogger<MembersController> logger, DatabaseContext databaseContext)
+    public MembersController(ILogger<MembersController> logger, DatabaseContext databaseContext, IAccessIdentifierService accessIdentityService)
     {
         _logger = logger;
         _databaseContext = databaseContext;
+        _accessIdentityService = accessIdentityService;
     }
 
     [HttpPost()]
     public ActionResult<Guid> Post([FromBody] CreateMemberRequest newMember)
     {
+        var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
+
         var member = new Member()
         {
-            Id = Guid.NewGuid(),
             Name = newMember.Name,
             Address = newMember.Address,
             ContactDetails = newMember.ContactDetails,
@@ -34,7 +40,7 @@ public class MembersController : ControllerBase
             ImageUrl = newMember.ImageUrl
         };
 
-        _databaseContext.Members.Add(member);
+        accessIdentity.Members.Add(member);
         _databaseContext.SaveChanges();
 
         return member.Id;
@@ -43,11 +49,17 @@ public class MembersController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<GetMemberResponse> Get(Guid id)
     {
+        var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
+
+        // TODO Users can get their members.
+        // TODO APIs can get any member
+
         var member = _databaseContext.Members
             .Include(x => x.NextOfKin)
             .FirstOrDefault(x => x.Id == id);
 
-        if (member == null)
+        if (member is null)
         {
             return NotFound();
         }
@@ -68,6 +80,12 @@ public class MembersController : ControllerBase
     [HttpGet()]
     public ActionResult<IEnumerable<GetMemberListItem>> GetList([FromQuery] string? searchTerm = null)
     {
+        var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
+
+        // TODO Users can get their members.
+        // TODO APIs can get any member
+
         IEnumerable<Member> members = _databaseContext.Members;
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -90,4 +108,59 @@ public class MembersController : ControllerBase
     {
         return NoContent();
     }
+}
+
+
+public interface IAccessIdentifierService
+{
+    AccessIdentifier GetOrAddByClaims(IEnumerable<Claim> claims);
+}
+
+internal class AccessIdentifierService : IAccessIdentifierService
+{
+    private readonly ILogger<MembersController> _logger;
+    private readonly DatabaseContext _databaseContext;
+
+    public AccessIdentifierService(ILogger<MembersController> logger, DatabaseContext databaseContext)
+    {
+        _logger = logger;
+        _databaseContext = databaseContext;
+    }
+
+    public AccessIdentifier GetOrAddByClaims(IEnumerable<Claim> claims)
+    {
+        var azureOid = claims.GetAzureOid();
+
+        // Get or create new AccessIdentifier
+        var identifier = _databaseContext.AccessIdentifiers.FirstOrDefault(x => x.AzureOid == azureOid)
+            ?? new AccessIdentifier()
+            {
+                AzureOid = azureOid,
+                Id = Guid.NewGuid(),
+                Type = claims.GetAccessIdentifierType()
+            };
+
+        _databaseContext.Add(identifier);
+        _databaseContext.SaveChanges();
+
+        return identifier;
+    }
+}
+
+
+internal static class ClaimExtensions
+{
+    private const string OidValueTypeString = "http://schemas.microsoft.com/identity/claims/objectidentifier";
+    private const string ScopeValueTypeString = "http://schemas.microsoft.com/identity/claims/scope";
+
+    public static IEnumerable<Claim> GetClaims(this IIdentity securityPrincipleIdentity)
+        => ((ClaimsIdentity)securityPrincipleIdentity).Claims;
+
+    public static Guid GetAzureOid(this IEnumerable<Claim> claims)
+        => Guid.Parse(claims.Single(x => x.Type is OidValueTypeString).Value);
+
+    public static AccessIdentifierType GetAccessIdentifierType(this IEnumerable<Claim> claims)
+        => claims.First(x => x.Type is ScopeValueTypeString).Value.StartsWith("app.", StringComparison.InvariantCultureIgnoreCase)
+            ? AccessIdentifierType.Api
+            : AccessIdentifierType.User;
 }
