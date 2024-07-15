@@ -1,15 +1,12 @@
-﻿namespace Nok.Api.Controllers;
+﻿using Nok.Infrastructure.Data.Models;
 
-public class CreateNextOfKinRequest : CreatePersonBaseRequest
-{
-    public string Relationship { get; init; } = string.Empty;
-}
+namespace Nok.Api.Controllers;
 
-public class CreatePersonBaseRequest
+public class CreateNextOfKinRequest
 {
-    public string? Title { get; init; }
-    public string FirstName { get; init; } = string.Empty;
-    public string? MiddleName { get; init; }
-    public string LastName { get; init; } = string.Empty;
-    public string Email { get; init; } = string.Empty;
+    public required Name Name { get; init; }
+    public Address? Address { get; init; }
+    public DateOfBirth? DateOfBirth { get; init; }
+    public required ContactDetails ContactDetails { get; init; }
+    public required string Relationship { get; init; }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nok.Infrastructure.Data;
+using Nok.Infrastructure.Data.Models;
 
 namespace Nok.Api.Controllers;
 
@@ -22,35 +23,29 @@ public class NextOfKinsController : ControllerBase
     [HttpPost()]
     public ActionResult<Guid> Post([FromRoute] Guid memberId, [FromBody] CreateNextOfKinRequest newNok)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKin)
-            .FirstOrDefault(x => x.Id == memberId);
+        var member = _databaseContext.Members.FirstOrDefault(x => x.Id == memberId);
 
         if (member == null)
         {
             return NotFound();
         }
 
-        //var nextOfKin = new NextOfKin()
-        //{
-        //    Id = Guid.NewGuid(),
-        //    Name = member.Name,
-        //    ContactDetails = newNok.,
-        //    Relationship = newNok.Relationship
-        //}
+        var nextOfKin = new NextOfKin()
+        {
+            //Id = Guid.NewGuid(),
+            Name = newNok.Name,
+            ContactDetails = newNok.ContactDetails,
+            Address = newNok.Address,
+            DateOfBirth = newNok.DateOfBirth,
+            Relationship = newNok.Relationship
+        };
 
-
-        //    Guid.NewGuid(),
-        //    new Name(newNok.Title, newNok.FirstName, newNok.MiddleName, newNok.LastName),
-        //    new ContactDetails(newNok.Email, string.Empty, string.Empty, string.Empty),
-        //    newNok.Relationship);
-
-        //member.SetNextOfKin(nextOfKin);
+        member.NextOfKin.Add(nextOfKin);
 
         _databaseContext.Members.Update(member);
         _databaseContext.SaveChanges();
 
-        // return nextOfKin.Id;
-        return Guid.Empty;
+        return nextOfKin.Id;
     }
 
     [HttpGet("{nokId}")]

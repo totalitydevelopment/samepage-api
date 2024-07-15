@@ -1,7 +1,10 @@
-﻿namespace Nok.Infrastructure.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Nok.Infrastructure.Data.Models;
 
 public class NextOfKin : INextOfKin
 {
+    [Key]
     public Guid Id { get; init; }
     public required Name Name { get; init; }
     public Address? Address { get; init; }
