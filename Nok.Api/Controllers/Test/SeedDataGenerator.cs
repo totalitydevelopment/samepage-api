@@ -1,6 +1,6 @@
 ﻿using Bogus;
-using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data.Migrations;
+using Nok.Infrastructure.Data.Models;
 
 namespace Nok.Infrastructure.Test.Database.Seeder;
 
@@ -19,7 +19,7 @@ public class SeedDataGenerator
             .RuleFor(x => x.Id, f => f.Random.Uuid())
             .RuleFor(x => x.Name, f => f.NokName())
             .RuleFor(x => x.Address, f => f.NokAddress())
-            .RuleFor(x => x.Contact, f => f.NokContactDetails())
+            .RuleFor(x => x.ContactDetails, f => f.NokContactDetails())
             .RuleFor(x => x.DateOfBirth, f => f.NokDateOfBirth())
             .RuleFor(x => x.Vehicle, f => f.NokVehicle());
 

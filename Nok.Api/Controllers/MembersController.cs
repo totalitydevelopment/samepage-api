@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
+using Nok.Infrastructure.Data.Models;
 
 namespace Nok.Api.Controllers;
 
@@ -23,12 +23,16 @@ public class MembersController : ControllerBase
     [HttpPost()]
     public ActionResult<Guid> Post([FromBody] CreateMemberRequest newMember)
     {
-        var member = new Member(Guid.NewGuid(), new Name(newMember.Title, newMember.FirstName, newMember.MiddleName, newMember.LastName));
-
-        if (!string.IsNullOrEmpty(newMember.Email))
+        var member = new Member()
         {
-            member.SetContactEmail(newMember.Email);
-        }
+            Id = Guid.NewGuid(),
+            Name = newMember.Name,
+            Address = newMember.Address,
+            ContactDetails = newMember.ContactDetails,
+            DateOfBirth = newMember.DateOfBirth,
+            Vehicle = newMember.Vehicle,
+            ImageUrl = newMember.ImageUrl
+        };
 
         _databaseContext.Members.Add(member);
         _databaseContext.SaveChanges();
@@ -40,7 +44,7 @@ public class MembersController : ControllerBase
     public ActionResult<GetMemberResponse> Get(Guid id)
     {
         var member = _databaseContext.Members
-            .Include(x => x.NextOfKins)
+            .Include(x => x.NextOfKin)
             .FirstOrDefault(x => x.Id == id);
 
         if (member == null)
@@ -52,12 +56,12 @@ public class MembersController : ControllerBase
         {
             Id = member.Id,
             Name = new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname),
-            Contact = member.Contact == null ? null : new ContactResponse(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber),
+            Contact = member.ContactDetails == null ? null : new ContactResponse(member.ContactDetails.Email, member.ContactDetails.HomeNumber, member.ContactDetails.WorkNumber, member.ContactDetails.MobileNumber),
             Vehicle = member.Vehicle == null ? null : new VehicleResponse(member.Vehicle.RegistrationNumber, member.Vehicle.Make, member.Vehicle.Model, member.Vehicle.Colour, member.Vehicle.Notes),
-            HasImage = member.HasImage,
+            HasImage = member.HasImage(),
             DateOfBirth = member.DateOfBirth == null ? null : new DateOfBirthResponse(member.DateOfBirth.Year, member.DateOfBirth.Month, member.DateOfBirth.Day),
-            NextOfKins = member.NextOfKins.Select(member => new NextOfKinResponse(member.Id, new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname), new ContactResponse(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber), member.Relationship)).ToList(),
-            ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
+            NextOfKin = member.NextOfKin.Select(member => new NextOfKinResponse(member.Id, new NameResponse(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname), new ContactResponse(member.ContactDetails.Email, member.ContactDetails.HomeNumber, member.ContactDetails.WorkNumber, member.ContactDetails.MobileNumber), member.Relationship)).ToList(),
+            ImageUrl = member.HasImage() ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
         };
     }
 
@@ -76,10 +80,8 @@ public class MembersController : ControllerBase
             Id = u.Id,
             Name = new NameResponse(u.Name.Title, u.Name.FirstName, u.Name.MiddleName, u.Name.Surname),
             DateOfBirth = u.DateOfBirth == null ? null : new DateOfBirthResponse(u.DateOfBirth.Year, u.DateOfBirth.Month, u.DateOfBirth.Day),
-
-            // DateOfBirth = u.DateOfBirth,
             KnownTown = u.Address?.Town,
-            HasImage = u.HasImage
+            HasImage = u.HasImage()
         }).ToList();
     }
 

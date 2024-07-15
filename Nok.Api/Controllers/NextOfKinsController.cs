@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
 
 namespace Nok.Api.Controllers;
@@ -23,7 +22,7 @@ public class NextOfKinsController : ControllerBase
     [HttpPost()]
     public ActionResult<Guid> Post([FromRoute] Guid memberId, [FromBody] CreateNextOfKinRequest newNok)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKins)
+        var member = _databaseContext.Members.Include(x => x.NextOfKin)
             .FirstOrDefault(x => x.Id == memberId);
 
         if (member == null)
@@ -31,24 +30,33 @@ public class NextOfKinsController : ControllerBase
             return NotFound();
         }
 
-        var nextOfKin = new NextOfKin(
-            Guid.NewGuid(),
-            new Name(newNok.Title, newNok.FirstName, newNok.MiddleName, newNok.LastName),
-            new ContactDetails(newNok.Email, string.Empty, string.Empty, string.Empty),
-            newNok.Relationship);
+        //var nextOfKin = new NextOfKin()
+        //{
+        //    Id = Guid.NewGuid(),
+        //    Name = member.Name,
+        //    ContactDetails = newNok.,
+        //    Relationship = newNok.Relationship
+        //}
 
-        member.SetNextOfKin(nextOfKin);
+
+        //    Guid.NewGuid(),
+        //    new Name(newNok.Title, newNok.FirstName, newNok.MiddleName, newNok.LastName),
+        //    new ContactDetails(newNok.Email, string.Empty, string.Empty, string.Empty),
+        //    newNok.Relationship);
+
+        //member.SetNextOfKin(nextOfKin);
 
         _databaseContext.Members.Update(member);
         _databaseContext.SaveChanges();
 
-        return nextOfKin.Id;
+        // return nextOfKin.Id;
+        return Guid.Empty;
     }
 
     [HttpGet("{nokId}")]
     public ActionResult<GetNokResponse> Get([FromRoute] Guid memberId, [FromRoute] Guid nokId)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKins)
+        var member = _databaseContext.Members.Include(x => x.NextOfKin)
             .FirstOrDefault(x => x.Id == memberId);
 
         if (member == null)
@@ -56,7 +64,7 @@ public class NextOfKinsController : ControllerBase
             return NotFound();
         }
 
-        var nok = member.NextOfKins.FirstOrDefault(x => x.Id == nokId);
+        var nok = member.NextOfKin.FirstOrDefault(x => x.Id == nokId);
 
         if (nok == null)
         {
@@ -74,7 +82,7 @@ public class NextOfKinsController : ControllerBase
     [HttpGet()]
     public ActionResult<List<GetNokResponse>> GetAll([FromRoute] Guid memberId)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKins)
+        var member = _databaseContext.Members.Include(x => x.NextOfKin)
             .FirstOrDefault(x => x.Id == memberId);
 
         if (member == null)
@@ -82,7 +90,7 @@ public class NextOfKinsController : ControllerBase
             return NotFound();
         }
 
-        return member.NextOfKins.Select(x => new GetNokResponse
+        return member.NextOfKin.Select(x => new GetNokResponse
         {
             Id = x.Id,
             Name = new NameResponse(x.Name.Title, x.Name.FirstName, x.Name.MiddleName, x.Name.Surname),
