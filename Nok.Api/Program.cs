@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Nok.Api.Controllers;
+using Nok.Api.Services;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
 
@@ -91,10 +91,7 @@ public class Program
                     {
                         AuthorizationUrl = new Uri(builder.Configuration["Swagger:AuthorizationUrl"]!),
                         TokenUrl = new Uri(builder.Configuration["Swagger:TokenUrl"]!),
-                        Scopes = new Dictionary<string, string>
-                        {
-                            [builder.Configuration["Swagger:ApiScope"]!] = "read the api",
-                        }
+                        Scopes = GetScopeDescriptions(builder.Configuration.GetSection("Swagger:ApiScopes").Get<List<string>>())
                     }
                 }
             });
@@ -106,7 +103,7 @@ public class Program
                     {
                         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
                     },
-                    new[] { builder.Configuration["Swagger:ApiScope"] }
+                    builder.Configuration.GetSection("Swagger:ApiScopes").Get<List<string>>()
                 }
             });
 
@@ -128,6 +125,18 @@ public class Program
                 }
             });
         });
+    }
+
+    private static IDictionary<string, string> GetScopeDescriptions(IEnumerable<string>? scopes)
+    {
+        var scopeDescriptions = new Dictionary<string, string>();
+
+        if (scopes is null)
+        {
+            return scopeDescriptions;
+        }
+
+        return scopes.ToDictionary(x => x, x => x.Substring(x.LastIndexOf('/') + 1));
     }
 
     private static void ConfigureSwaggerUi(WebApplicationBuilder builder, WebApplication app)
