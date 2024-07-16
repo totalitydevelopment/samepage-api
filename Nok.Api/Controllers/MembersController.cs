@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nok.Api.Extensions;
 using Nok.Api.Services;
-using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Data.Models;
 

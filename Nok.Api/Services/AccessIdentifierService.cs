@@ -1,5 +1,5 @@
 ﻿using Nok.Api.Controllers;
-using Nok.Core.Extensions;
+using Nok.Api.Extensions;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Data.Models;
 using System.Security.Claims;

@@ -20,8 +20,8 @@ internal static class BogusExtensions
         };
     }
 
-    public static IAddress NokAddress(this Faker faker)
-        => new Address()
+    public static IAddress NokAddress(this Faker faker) =>
+        new Address()
         {
             Address1 = faker.Address.StreetAddress(),
             Address2 = faker.Address.SecondaryAddress(),
@@ -30,8 +30,8 @@ internal static class BogusExtensions
             Country = faker.Address.CountryCode()
         };
 
-    public static IContactDetails NokContactDetails(this Faker faker)
-        => new ContactDetails()
+    public static IContactDetails NokContactDetails(this Faker faker) =>
+        new ContactDetails()
         {
             Email = faker.Person.Email,
             HomeNumber = faker.Person.Phone,
@@ -39,11 +39,11 @@ internal static class BogusExtensions
             WorkNumber = faker.Person.Phone
         };
 
-    public static IDateOfBirth NokDateOfBirth(this Faker faker)
-        => new DateOfBirth(faker.Person.DateOfBirth);
+    public static IDateOfBirth NokDateOfBirth(this Faker faker) =>
+        new DateOfBirth(faker.Person.DateOfBirth);
 
-    public static IVehicle NokVehicle(this Faker faker)
-        => new Vehicle()
+    public static IVehicle NokVehicle(this Faker faker) =>
+        new Vehicle()
         {
             RegistrationNumber = faker.Vehicle.GbRegistrationPlate(new DateTime(2001, 09, 01), new DateTime(2024, 1, 1)),
             Make = faker.Vehicle.Manufacturer(),
@@ -51,6 +51,4 @@ internal static class BogusExtensions
             Colour = faker.Commerce.Color(),
             Notes = faker.Commerce.ProductDescription()
         };
-
-
 }
