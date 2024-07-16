@@ -1,0 +1,7 @@
+cd C:\Users\Anon\source\repos\Nok\Nok.Api
+
+dotnet ef migrations add nok-table-init -c DatabaseContext -p ../Nok.Infrastructure/Nok.Infrastructure.csproj -s Nok.Api.csproj -o Data/Migrations
+
+dotnet ef migrations remove -c DatabaseContext -p ../Nok.Infrastructure/Nok.Infrastructure.csproj -s Nok.Api.csproj
+
+dotnet ef database update -c DatabaseContext -p ../Nok.Infrastructure/Nok.Infrastructure.csproj -s Nok.Api.csproj
