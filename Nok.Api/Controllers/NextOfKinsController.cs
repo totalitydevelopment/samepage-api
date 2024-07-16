@@ -21,6 +21,7 @@ public class NextOfKinsController : ControllerBase
     }
 
     [HttpPost()]
+    [Authorize(Policy = "write:members")]
     public ActionResult<Guid> Post([FromRoute] Guid memberId, [FromBody] CreateNextOfKinRequest newNok)
     {
         var member = _databaseContext.Members.FirstOrDefault(x => x.Id == memberId);
@@ -48,6 +49,7 @@ public class NextOfKinsController : ControllerBase
     }
 
     [HttpGet("{nokId}")]
+    [Authorize(Policy = "read:members")]
     public ActionResult<GetNokResponse> Get([FromRoute] Guid memberId, [FromRoute] Guid nokId)
     {
         var member = _databaseContext.Members.Include(x => x.NextOfKin)
@@ -74,6 +76,7 @@ public class NextOfKinsController : ControllerBase
     }
 
     [HttpGet()]
+    [Authorize(Policy = "read:members")]
     public ActionResult<List<GetNokResponse>> GetAll([FromRoute] Guid memberId)
     {
         var member = _databaseContext.Members.Include(x => x.NextOfKin)
