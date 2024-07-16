@@ -13,14 +13,14 @@ public abstract class Person : GuidDataEntity
         // Required by EF
     }
 
-    public Person(Guid id, Name name)
+    public Person(Guid id, Name name, Guid accessIdentifiedId)
     {
         Id = id;
         Name = name;
 
-        CreatedBy = Id;
+        CreatedBy = accessIdentifiedId;
         CreatedDate = SystemTime.UtcNow();
-        UpdatedBy = Id;
+        UpdatedBy = accessIdentifiedId;
         UpdatedDate = SystemTime.UtcNow();
     }
 

@@ -1,4 +1,7 @@
-﻿namespace Nok.Core.Aggregates.Register;
+﻿using Nok.Core.Enums;
+using Nok.Core.Extensions;
+
+namespace Nok.Core.Aggregates.Register;
 
 public class Member : Person
 {
@@ -9,9 +12,9 @@ public class Member : Person
         // Required by EF
     }
 
-    public Member(Guid id, Name name) : base(id, name)
+    public Member(Guid id, Name name, Guid accessIdentifiedId) : base(id, name, accessIdentifiedId)
     {
-        _nextOfKins = [];
+
     }
 
     public DateOfBirth? DateOfBirth { get; private set; }
@@ -39,13 +42,37 @@ public class Member : Person
 
     public void SetContactEmail(string email)
     {
-        if (Contact is null)
-        {
-            Contact = new ContactDetails(email, string.Empty, string.Empty, string.Empty);
+        Contact = new ContactDetails(email, Contact);
+    }
+}
 
-            return;
-        }
+public class AccessIdentifier : GuidDataEntity
+{
+    private readonly List<Member> _members = [];
 
-        Contact = new ContactDetails(email, Contact.HomeNumber ?? string.Empty, Contact.WorkNumber ?? string.Empty, Contact.MobileNumber ?? string.Empty);
+    public required Guid AzureOid { get; init; }
+    public required AccessIdentifierType Type { get; init; }
+    public IReadOnlyList<Member> Members => _members.AsReadOnly();
+
+    private AccessIdentifier()
+    {
+        // Required by EF
+    }
+
+    public AccessIdentifier(Guid id, Guid azureOid, AccessIdentifierType type)
+    {
+        Id = id;
+        AzureOid = azureOid;
+        Type = type;
+
+        CreatedBy = Id;
+        CreatedDate = SystemTime.UtcNow();
+        UpdatedBy = Id;
+        UpdatedDate = SystemTime.UtcNow();
+    }
+
+    public void AddMember(Member nextOfKin)
+    {
+        _members.Add(nextOfKin);
     }
 }

@@ -7,7 +7,8 @@ public class NextOfKin : Person
         // Required by EF
     }
 
-    public NextOfKin(Guid id, Name name, ContactDetails contactDetails, string relationship) : base(id, name)
+    public NextOfKin(Guid id, Name name, ContactDetails contactDetails, string relationship, Guid accessIdentifiedId)
+        : base(id, name, accessIdentifiedId)
     {
         Relationship = relationship;
         Contact = contactDetails;
