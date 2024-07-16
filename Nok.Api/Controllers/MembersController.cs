@@ -130,18 +130,20 @@ internal class AccessIdentifierService : IAccessIdentifierService
     public AccessIdentifier GetOrAddByClaims(IEnumerable<Claim> claims)
     {
         var azureOid = claims.GetAzureOid();
+        var identifier = _databaseContext.AccessIdentifiers.FirstOrDefault(x => x.AzureOid == azureOid);
 
-        // Get or create new AccessIdentifier
-        var identifier = _databaseContext.AccessIdentifiers.FirstOrDefault(x => x.AzureOid == azureOid)
-            ?? new AccessIdentifier()
+        if (identifier is null)
+        {
+            identifier = new AccessIdentifier()
             {
                 AzureOid = azureOid,
                 Id = Guid.NewGuid(),
                 Type = claims.GetAccessIdentifierType()
             };
 
-        _databaseContext.Add(identifier);
-        _databaseContext.SaveChanges();
+            _databaseContext.Add(identifier);
+            _databaseContext.SaveChanges();
+        }
 
         return identifier;
     }

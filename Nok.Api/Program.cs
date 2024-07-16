@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Nok.Api.Controllers;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
 
@@ -46,6 +47,9 @@ public class Program
                 builder.Configuration.GetConnectionString("SqlConnection"),
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
+
+        builder.Services
+            .AddSingleton<IAccessIdentifierService, AccessIdentifierService>();
 
         var app = builder.Build();
 
