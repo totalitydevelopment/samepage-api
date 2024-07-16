@@ -25,6 +25,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpPost()]
+    [Authorize(Policy = "write:members")]
     public ActionResult<Guid> Post([FromBody] CreateMemberRequest newMember)
     {
         var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
@@ -32,6 +33,7 @@ public class MembersController : ControllerBase
 
         var member = new Member()
         {
+            Id = Guid.NewGuid(),
             Name = newMember.Name,
             Address = newMember.Address,
             ContactDetails = newMember.ContactDetails,
@@ -47,6 +49,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "read:members")]
     public ActionResult<GetMemberResponse> Get(Guid id)
     {
         var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
@@ -78,6 +81,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet()]
+    [Authorize(Policy = "read:members")]
     public ActionResult<IEnumerable<GetMemberListItem>> GetList([FromQuery] string? searchTerm = null)
     {
         var accessIdentity = _accessIdentityService.GetOrAddByClaims(HttpContext.User.Identity?.GetClaims()
@@ -104,6 +108,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = "write:members")]
     public ActionResult Put(Guid id, [FromBody] CreateMemberRequest updatedMember)
     {
         return NoContent();

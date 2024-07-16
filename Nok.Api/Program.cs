@@ -14,17 +14,20 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Adds Microsoft Identity platform (Azure AD B2C) support to protect this Api
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(options =>
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApi(jwtOptions =>
             {
-                builder.Configuration.Bind("AzureAdB2C", options);
-                options.TokenValidationParameters.NameClaimType = "name";
-            },
-            options =>
+                builder.Configuration.Bind("AzureAdB2C", jwtOptions);
+                jwtOptions.TokenValidationParameters.NameClaimType = "name";
+            }, msIdentityOptions =>
             {
-                builder.Configuration.Bind("AzureAdB2C", options);
+                builder.Configuration.Bind("AzureAdB2C", msIdentityOptions);
             });
+
+        builder.Services.AddAuthorization(options => options
+            .AddRequireScopePolicy("read:members", "app.members.read.all", "user.members.read")
+            .AddRequireScopePolicy("write:members", "user.members.write"));
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
