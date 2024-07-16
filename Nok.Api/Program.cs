@@ -5,6 +5,14 @@ using Microsoft.OpenApi.Models;
 using Nok.Api.Services;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Nok.Api.Models;
+using FluentValidation.AspNetCore;
+using Nok.Core.Interfaces;
+
+using Nok.Infrastructure.Services;
 
 namespace Nok.Api;
 
@@ -12,7 +20,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -33,6 +41,8 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddScoped<IMembersService, MembersService>();// TODO this will live in a module in infra proj
+
         ConfigureOpenApiGeneration(builder);
 
         // Add CORS services
@@ -49,6 +59,38 @@ public class Program
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("SqlConnection"),
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
+        });
+
+        builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(ApiProject)); });
+
+        builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
+        builder.Services.AddFluentValidationAutoValidation();
+
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.HttpContext.Response.ContentType = "application/json";
+                var errorsInModelState = context.ModelState
+                       .Where(x => x.Value.Errors.Count > 0)
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Errors.Select(x => x.ErrorMessage).ToArray());
+
+                var errors = new List<string>();
+                foreach (var error in errorsInModelState)
+                {
+                    foreach (var subError in error.Value)
+                    {
+                        errors.Add($"Key: '{error.Key}', message : {subError}");
+                    }
+                }
+                var errorResponse = new BaseValidationErrors()
+                {
+                    Message = "Validation errors",
+                    ValidationErrors = errors
+                };
+                return new BadRequestObjectResult(errorResponse);
+            };
         });
 
         builder.Services

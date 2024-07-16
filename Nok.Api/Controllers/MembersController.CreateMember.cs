@@ -1,8 +1,9 @@
 ﻿using Nok.Infrastructure.Data.Models;
+using Nok.Api.Validators;
 
 namespace Nok.Api.Controllers;
 
-public class CreateMemberRequest
+public class CreateMemberRequest : BaseValidationModel<CreateMemberRequest>
 {
     public required Name Name { get; init; }
     public required Address Address { get; init; }
@@ -34,7 +35,7 @@ public class GetNokResponse : BaseIdResponse
     required public NameResponse Name { get; init; }
 }
 
-public class GetMemberListItem
+public class GetMemberListItemResponse
 {
     required public Guid Id { get; init; }
     required public NameResponse Name { get; init; }
