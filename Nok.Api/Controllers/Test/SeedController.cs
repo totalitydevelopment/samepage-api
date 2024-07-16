@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
-using Nok.Infrastructure.Test.Database.Seeder;
 
 namespace Nok.Api.Controllers.Test;
 

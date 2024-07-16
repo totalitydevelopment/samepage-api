@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Nok.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nok.Infrastructure.Data.Models;
 

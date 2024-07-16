@@ -1,4 +1,4 @@
-﻿namespace Nok.Infrastructure.Data.Models;
+﻿namespace Nok.Core.Enums;
 
 public enum AccessIdentifierType
 {

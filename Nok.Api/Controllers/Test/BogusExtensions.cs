@@ -2,7 +2,7 @@
 using Bogus.Extensions.UnitedKingdom;
 using Nok.Infrastructure.Data.Models;
 
-namespace Nok.Infrastructure.Data.Migrations;
+namespace Nok.Api.Controllers.Test;
 
 internal static class BogusExtensions
 {

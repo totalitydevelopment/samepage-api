@@ -1,8 +1,7 @@
 ﻿using Bogus;
-using Nok.Infrastructure.Data.Migrations;
 using Nok.Infrastructure.Data.Models;
 
-namespace Nok.Infrastructure.Test.Database.Seeder;
+namespace Nok.Api.Controllers.Test;
 
 public class SeedDataGenerator
 {

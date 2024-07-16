@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nok.Api.Services;
+using Nok.Core.Extensions;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Data.Models;
-using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Nok.Api.Controllers;
 
@@ -108,61 +108,4 @@ public class MembersController : ControllerBase
     {
         return NoContent();
     }
-}
-
-
-public interface IAccessIdentifierService
-{
-    AccessIdentifier GetOrAddByClaims(IEnumerable<Claim> claims);
-}
-
-internal class AccessIdentifierService : IAccessIdentifierService
-{
-    private readonly ILogger<MembersController> _logger;
-    private readonly DatabaseContext _databaseContext;
-
-    public AccessIdentifierService(ILogger<MembersController> logger, DatabaseContext databaseContext)
-    {
-        _logger = logger;
-        _databaseContext = databaseContext;
-    }
-
-    public AccessIdentifier GetOrAddByClaims(IEnumerable<Claim> claims)
-    {
-        var azureOid = claims.GetAzureOid();
-        var identifier = _databaseContext.AccessIdentifiers.FirstOrDefault(x => x.AzureOid == azureOid);
-
-        if (identifier is null)
-        {
-            identifier = new AccessIdentifier()
-            {
-                AzureOid = azureOid,
-                Id = Guid.NewGuid(),
-                Type = claims.GetAccessIdentifierType()
-            };
-
-            _databaseContext.Add(identifier);
-            _databaseContext.SaveChanges();
-        }
-
-        return identifier;
-    }
-}
-
-
-internal static class ClaimExtensions
-{
-    private const string OidValueTypeString = "http://schemas.microsoft.com/identity/claims/objectidentifier";
-    private const string ScopeValueTypeString = "http://schemas.microsoft.com/identity/claims/scope";
-
-    public static IEnumerable<Claim> GetClaims(this IIdentity securityPrincipleIdentity)
-        => ((ClaimsIdentity)securityPrincipleIdentity).Claims;
-
-    public static Guid GetAzureOid(this IEnumerable<Claim> claims)
-        => Guid.Parse(claims.Single(x => x.Type is OidValueTypeString).Value);
-
-    public static AccessIdentifierType GetAccessIdentifierType(this IEnumerable<Claim> claims)
-        => claims.First(x => x.Type is ScopeValueTypeString).Value.StartsWith("app.", StringComparison.InvariantCultureIgnoreCase)
-            ? AccessIdentifierType.Api
-            : AccessIdentifierType.User;
 }
