@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nok.Core.Aggregates.Register;
 using System.Reflection;
 
 namespace Nok.Infrastructure.Data;

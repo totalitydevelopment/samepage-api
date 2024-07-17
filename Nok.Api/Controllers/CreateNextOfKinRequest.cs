@@ -1,4 +1,5 @@
-﻿using Nok.Infrastructure.Data.Models;
+﻿
+using Nok.Core.Aggregates.Register;
 
 namespace Nok.Api.Controllers;
 

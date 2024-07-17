@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Nok.Api.Extensions;
+using Nok.Core.Models;
 using Nok.Infrastructure.Data;
-using Nok.Infrastructure.Data.Models;
+using Nok.Infrastructure.Services;
 
 namespace Nok.Api.Controllers;
 
@@ -13,85 +14,55 @@ public class NextOfKinsController : ControllerBase
 {
     private readonly ILogger<MembersController> _logger;
     private readonly DatabaseContext _databaseContext;
+    private readonly IAccessIdentifierService _accessIdentityService;
+    private readonly INextOfKinService _nextOfKinService;
 
-    public NextOfKinsController(ILogger<MembersController> logger, DatabaseContext databaseContext)
+    public NextOfKinsController(
+        ILogger<MembersController> logger,
+        DatabaseContext databaseContext,
+        IAccessIdentifierService accessIdentityService,
+        INextOfKinService nextOfKinService)
     {
         _logger = logger;
         _databaseContext = databaseContext;
+        _accessIdentityService = accessIdentityService;
+        _nextOfKinService = nextOfKinService;
     }
 
     [HttpPost()]
     [Authorize(Policy = "write:members")]
-    public ActionResult<Guid> Post([FromRoute] Guid memberId, [FromBody] CreateNextOfKinRequest newNok)
+    public async Task<ActionResult<Guid>> Post([FromRoute] Guid memberId, [FromBody] NextOfKinDto newNextOfKin)
     {
-        var member = _databaseContext.Members.FirstOrDefault(x => x.Id == memberId);
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        if (member == null)
-        {
-            return NotFound();
-        }
+        // TODO handle member not found
 
-        var nextOfKin = new NextOfKin()
-        {
-            Name = newNok.Name,
-            ContactDetails = newNok.ContactDetails,
-            Address = newNok.Address,
-            DateOfBirth = newNok.DateOfBirth,
-            Relationship = newNok.Relationship
-        };
-
-        member.NextOfKin.Add(nextOfKin);
-
-        _databaseContext.Members.Update(member);
-        _databaseContext.SaveChanges();
-
-        return nextOfKin.Id;
+        return Ok(await _nextOfKinService.CreateNextOfKinAsync(accessIdentityId, memberId, newNextOfKin));
     }
 
-    [HttpGet("{nokId}")]
+    [HttpGet("{nextOfKinId}")]
     [Authorize(Policy = "read:members")]
-    public ActionResult<GetNokResponse> Get([FromRoute] Guid memberId, [FromRoute] Guid nokId)
+    public async Task<ActionResult<NextOfKinDto>> Get([FromRoute] Guid memberId, [FromRoute] Guid nextOfKinId)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKin)
-            .FirstOrDefault(x => x.Id == memberId);
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        if (member == null)
-        {
-            return NotFound();
-        }
+        // TODO handle member not found
+        // TODO handle nextOfKin not found
 
-        var nok = member.NextOfKin.FirstOrDefault(x => x.Id == nokId);
-
-        if (nok == null)
-        {
-            return NotFound();
-        }
-
-        return new GetNokResponse
-        {
-            Id = nok.Id,
-            Name = new NameResponse(nok.Name.Title, nok.Name.FirstName, nok.Name.MiddleName, nok.Name.Surname),
-            Relationship = nok.Relationship,
-        };
+        return Ok(await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId, nextOfKinId));
     }
 
     [HttpGet()]
     [Authorize(Policy = "read:members")]
-    public ActionResult<List<GetNokResponse>> GetAll([FromRoute] Guid memberId)
+    public async Task<ActionResult<IEnumerable<NextOfKinDto>>> GetAll([FromRoute] Guid memberId)
     {
-        var member = _databaseContext.Members.Include(x => x.NextOfKin)
-            .FirstOrDefault(x => x.Id == memberId);
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        if (member == null)
-        {
-            return NotFound();
-        }
+        // TODO handle member not found
 
-        return member.NextOfKin.Select(x => new GetNokResponse
-        {
-            Id = x.Id,
-            Name = new NameResponse(x.Name.Title, x.Name.FirstName, x.Name.MiddleName, x.Name.Surname),
-            Relationship = x.Relationship,
-        }).ToList();
+        return Ok(await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId));
     }
 }

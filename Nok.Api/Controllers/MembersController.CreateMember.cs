@@ -1,16 +1,15 @@
-﻿using Nok.Infrastructure.Data.Models;
-using Nok.Api.Validators;
+﻿using Nok.Api.Validators;
 
 namespace Nok.Api.Controllers;
 
 public class CreateMemberRequest : BaseValidationModel<CreateMemberRequest>
 {
-    public required Name Name { get; init; }
-    public required Address Address { get; init; }
-    public required ContactDetails ContactDetails { get; init; }
-    public required Vehicle Vehicle { get; init; }
-    public required DateOfBirth DateOfBirth { get; init; }
-    public string? ImageUrl { get; init; }
+    public string? Title { get; init; }
+    public string FirstName { get; init; } = string.Empty;
+    public string? MiddleName { get; init; }
+    public string LastName { get; init; } = string.Empty;
+    public string Email { get; init; } = string.Empty;
+    public string Password { get; init; } = string.Empty;
 }
 
 public class BaseIdResponse

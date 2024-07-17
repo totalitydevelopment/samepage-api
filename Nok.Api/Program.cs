@@ -1,18 +1,17 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Nok.Api.Services;
-using Nok.Core.Extensions;
-using Nok.Infrastructure.Data;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+using Nok.Api.Extensions;
 using Nok.Api.Models;
-using FluentValidation.AspNetCore;
-using Nok.Core.Interfaces;
-
+using Nok.Core.Extensions;
+using Nok.Core.Models.Profiles;
+using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
+using System.Net;
 
 namespace Nok.Api;
 
@@ -94,7 +93,10 @@ public class Program
         });
 
         builder.Services
-            .AddSingleton<IAccessIdentifierService, AccessIdentifierService>();
+            .AddAutoMapper(typeof(CoreToDatabaseProfile))
+            .AddScoped<IAccessIdentifierService, AccessIdentifierService>()
+            .AddScoped<IMembersService, MembersService>()
+            .AddScoped<INextOfKinService, NextOfKinService>();
 
         var app = builder.Build();
 
@@ -104,6 +106,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
 
         app.Run();
     }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Nok.Api.Controllers;
 using Nok.Core.Aggregates.Register;
-using Nok.Core.Models;
+using Nok.Core.Models.old;
 
 namespace Nok.Api.Models.Profiles;
 
