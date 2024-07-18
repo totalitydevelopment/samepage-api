@@ -26,11 +26,5 @@ public class NameDtoValidator : AbstractValidator<NameDto>
         RuleFor(member => member.Title)
             .MaximumLength(100)
             .WithName(nameof(NameDto.Title));
-
-        //RuleFor(member => member.Email).NotNull()
-        //        .NotEmpty()
-        //        .MaximumLength(300)
-        //        .EmailAddress()
-        //        .WithName(nameof(NameDto.Email));
     }
 }

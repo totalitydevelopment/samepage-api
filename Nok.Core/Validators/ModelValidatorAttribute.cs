@@ -13,6 +13,7 @@ public class ModelValidatorAttribute : ActionFilterAttribute
             {
                 ValidateModel(context, actionArgument.Value.GetType(), model);
 
+                // Validate properties
                 foreach (var propertyInfo in model.GetType().GetProperties())
                 {
                     var property = propertyInfo.GetValue(model);
