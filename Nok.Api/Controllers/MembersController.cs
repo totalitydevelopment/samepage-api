@@ -29,7 +29,7 @@ public class MembersController : ControllerBase
     [HttpPost()]
     [Authorize(Policy = "write:members")]
     [ModelValidator]
-    public async Task<ActionResult<Guid>> Post([FromBody] MemberDto newMember)
+    public async Task<ActionResult<Guid>> Post([FromBody] MemberRequest newMember)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
@@ -39,7 +39,7 @@ public class MembersController : ControllerBase
 
     [HttpGet("{memberId}")]
     [Authorize(Policy = "read:members")]
-    public async Task<ActionResult<MemberDto>> Get(Guid memberId)
+    public async Task<ActionResult<MemberResponse>> Get(Guid memberId)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
@@ -51,7 +51,7 @@ public class MembersController : ControllerBase
 
     [HttpGet()]
     [Authorize(Policy = "read:members")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetList([FromQuery] string? searchTerm = null)
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> GetList([FromQuery] string? searchTerm = null)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
@@ -64,7 +64,7 @@ public class MembersController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Policy = "write:members")]
-    public ActionResult Put(Guid id, [FromBody] CreateMemberRequest updatedMember)
+    public ActionResult Put(Guid id, [FromBody] MemberRequest updatedMember)
     {
         return NoContent();
     }

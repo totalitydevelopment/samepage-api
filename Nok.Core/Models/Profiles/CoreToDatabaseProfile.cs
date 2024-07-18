@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Nok.Core.Aggregates.Register;
-using Nok.Core.Models;
 
 namespace Nok.Core.Models.Profiles;
 
@@ -23,10 +22,12 @@ public class CoreToDatabaseProfile : Profile
         CreateMap<AddressDto, Address>();
         CreateMap<Address, AddressDto>();
 
-        CreateMap<NextOfKinDto, NextOfKin>();
-        CreateMap<NextOfKin, NextOfKinDto>();
+        CreateMap<NextOfKinRequest, NextOfKin>();
+        CreateMap<NextOfKinRequestWithId, NextOfKin>();
+        CreateMap<NextOfKin, NextOfKinResponse>();
 
-        CreateMap<MemberDto, Member>();
-        CreateMap<Member, MemberDto>();
+        CreateMap<MemberRequest, Member>();
+        CreateMap<MemberRequestWithId, Member>();
+        CreateMap<Member, MemberResponse>();
     }
 }

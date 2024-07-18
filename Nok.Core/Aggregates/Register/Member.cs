@@ -2,16 +2,6 @@
 
 public class Member : Person
 {
-    private Member()
-    {
-        // Required by EF
-    }
-
-    public Member(Guid id, Name name, Guid accessIdentifiedId) : base(id, name, accessIdentifiedId)
-    {
-
-    }
-
     public DateOfBirth? DateOfBirth { get; private set; }
     public Vehicle? Vehicle { get; private set; }
     public bool HasImage => !string.IsNullOrWhiteSpace(ImageUrl);

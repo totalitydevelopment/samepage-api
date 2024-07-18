@@ -16,11 +16,15 @@ public class MembersService : IMembersService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateMemberAsync(Guid accessIdentifierId, MemberDto memberDto)
+    public async Task<Guid> CreateMemberAsync(Guid accessIdentifierId, MemberRequest memberRequest)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
 
-        var member = _mapper.Map<Member>(memberDto);
+        var member = _mapper.Map<Member>(new MemberRequestWithId(memberRequest)
+        {
+            Id = Guid.NewGuid()
+        });
+
         accessIdentifier.Members.Add(member);
 
         await _databaseContext.SaveChangesAsync();
@@ -28,17 +32,17 @@ public class MembersService : IMembersService
         return member.Id;
     }
 
-    public async Task<MemberDto> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
+    public async Task<MemberResponse> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
         var member = accessIdentifier.GetMember(memberId);
 
-        return _mapper.Map<MemberDto>(member);
+        return _mapper.Map<MemberResponse>(member);
         // TODO do something with the images URL. That something probably doesn't belong here.
         // ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
     }
 
-    public async Task<IEnumerable<MemberDto>> GetMembersAsync(Guid accessIdentifierId, string? searchTerm)
+    public async Task<IEnumerable<MemberResponse>> GetMembersAsync(Guid accessIdentifierId, string? searchTerm)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
 
@@ -49,10 +53,10 @@ public class MembersService : IMembersService
             members = members.Where(u => u.Name.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || u.Name.Surname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
         }
 
-        return _mapper.Map<IEnumerable<MemberDto>>(members);
+        return _mapper.Map<IEnumerable<MemberResponse>>(members);
     }
 
-    public Task ModifyMemberAsync(Guid accessIdentifierId, Guid memberId, MemberDto memberDto)
+    public Task ModifyMemberAsync(Guid accessIdentifierId, Guid memberId, MemberRequest memberRequest)
     {
         throw new NotImplementedException();
     }

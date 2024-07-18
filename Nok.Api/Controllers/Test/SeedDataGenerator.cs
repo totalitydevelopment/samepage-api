@@ -5,17 +5,16 @@ namespace Nok.Api.Controllers.Test;
 
 public class SeedDataGenerator
 {
-    public IEnumerable<MemberDto> Members { get; } = [];
+    public IEnumerable<MemberRequest> Members { get; } = [];
 
     public SeedDataGenerator()
     {
         Members = GenerateMembers(amount: 1000);
     }
 
-    private static IEnumerable<MemberDto> GenerateMembers(int amount)
+    private static IEnumerable<MemberRequest> GenerateMembers(int amount)
     {
-        var memberFaker = new Faker<MemberDto>("en_GB")
-            .RuleFor(x => x.Id, f => f.Random.Uuid())
+        var memberFaker = new Faker<MemberRequest>("en_GB")
             .RuleFor(x => x.Name, f => f.NokName())
             .RuleFor(x => x.Address, f => f.NokAddress())
             .RuleFor(x => x.Contact, f => f.NokContactDetails())

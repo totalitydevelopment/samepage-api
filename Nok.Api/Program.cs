@@ -60,8 +60,6 @@ public class Program
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
 
-        builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(ApiProject)); });
-
         builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
         builder.Services.AddFluentValidationAutoValidation();
 

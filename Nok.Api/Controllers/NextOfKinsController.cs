@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nok.Api.Extensions;
-using Nok.Core.Models;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
 
@@ -31,7 +30,7 @@ public class NextOfKinsController : ControllerBase
 
     [HttpPost()]
     [Authorize(Policy = "write:members")]
-    public async Task<ActionResult<Guid>> Post([FromRoute] Guid memberId, [FromBody] NextOfKinDto newNextOfKin)
+    public async Task<ActionResult<Guid>> Post([FromRoute] Guid memberId, [FromBody] Core.Models.NextOfKinRequest newNextOfKin)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
@@ -43,7 +42,7 @@ public class NextOfKinsController : ControllerBase
 
     [HttpGet("{nextOfKinId}")]
     [Authorize(Policy = "read:members")]
-    public async Task<ActionResult<NextOfKinDto>> Get([FromRoute] Guid memberId, [FromRoute] Guid nextOfKinId)
+    public async Task<ActionResult<Core.Models.NextOfKinResponse>> Get([FromRoute] Guid memberId, [FromRoute] Guid nextOfKinId)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
@@ -56,7 +55,7 @@ public class NextOfKinsController : ControllerBase
 
     [HttpGet()]
     [Authorize(Policy = "read:members")]
-    public async Task<ActionResult<IEnumerable<NextOfKinDto>>> GetAll([FromRoute] Guid memberId)
+    public async Task<ActionResult<IEnumerable<Core.Models.NextOfKinResponse>>> GetAll([FromRoute] Guid memberId)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
