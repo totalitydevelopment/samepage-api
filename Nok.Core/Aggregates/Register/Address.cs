@@ -1,3 +1,10 @@
 ﻿namespace Nok.Core.Aggregates.Register;
 
-public record Address(string Address1, string? Address2, string Town, string Postcode, string? Country);
+public class Address
+{
+    public required string Address1 { get; init; }
+    public string? Address2 { get; init; }
+    public required string Town { get; init; }
+    public required string Postcode { get; init; }
+    public string? Country { get; init; }
+}

@@ -1,7 +1,20 @@
 ﻿namespace Nok.Core.Aggregates.Register;
 
-public record DateOfBirth(int Year, int? Month, int? Day)
+public class DateOfBirth
 {
+    public DateOfBirth() { }
+
+    public DateOfBirth(DateTime dateOfBirth)
+    {
+        Year = dateOfBirth.Year;
+        Month = dateOfBirth.Month;
+        Day = dateOfBirth.Day;
+    }
+
+    public int Year { get; set; }
+    public int? Month { get; set; }
+    public int? Day { get; set; }
+
     // add age calculation if we know the date of birth
     public int? Age
     {

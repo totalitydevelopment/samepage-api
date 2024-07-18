@@ -1,3 +1,10 @@
 ﻿namespace Nok.Core.Aggregates.Register;
 
-public record Vehicle(string RegistrationNumber, string Make, string? Model, string? Colour, string? Notes);
+public class Vehicle
+{
+    public required string RegistrationNumber { get; set; }
+    public string? Make { get; init; }
+    public string? Model { get; init; }
+    public string? Colour { get; init; }
+    public string? Notes { get; init; }
+}

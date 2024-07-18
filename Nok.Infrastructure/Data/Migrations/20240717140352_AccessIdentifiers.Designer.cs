@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nok.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Nok.Infrastructure.Data;
 namespace Nok.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240717140352_AccessIdentifiers")]
+    partial class AccessIdentifiers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,21 +201,21 @@ namespace Nok.Infrastructure.Data.Migrations
                                 .HasColumnName("Address_Address2");
 
                             b1.Property<string>("Country")
-                                .HasMaxLength(56)
-                                .HasColumnType("nvarchar(56)")
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
                                 .HasColumnName("Address_Country");
 
                             b1.Property<string>("Postcode")
                                 .IsRequired()
                                 .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Address_Postcode");
+                                .HasColumnName("Address_Town");
 
                             b1.Property<string>("Town")
                                 .IsRequired()
                                 .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Address_Town");
+                                .HasColumnName("Address_City");
 
                             b1.HasKey("MemberId");
 
@@ -368,21 +371,21 @@ namespace Nok.Infrastructure.Data.Migrations
                                 .HasColumnName("Address_Address2");
 
                             b1.Property<string>("Country")
-                                .HasMaxLength(56)
-                                .HasColumnType("nvarchar(56)")
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
                                 .HasColumnName("Address_Country");
 
                             b1.Property<string>("Postcode")
                                 .IsRequired()
                                 .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Address_Postcode");
+                                .HasColumnName("Address_Town");
 
                             b1.Property<string>("Town")
                                 .IsRequired()
                                 .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Address_Town");
+                                .HasColumnName("Address_City");
 
                             b1.HasKey("NextOfKinId");
 

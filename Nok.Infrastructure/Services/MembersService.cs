@@ -1,77 +1,63 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using Nok.Core.Aggregates.Register;
-using Nok.Core.Interfaces;
 using Nok.Core.Models;
 using Nok.Infrastructure.Data;
-using Name = Nok.Core.Aggregates.Register.Name;
 
 namespace Nok.Infrastructure.Services;
 
 public class MembersService : IMembersService
 {
-    //TODO Split this into a readonly interface for the GETS
-
     private readonly DatabaseContext _databaseContext;
+    private readonly IMapper _mapper;
 
-    public MembersService(DatabaseContext databaseContext)
+    public MembersService(DatabaseContext databaseContext, IMapper mapper)
     {
         _databaseContext = databaseContext;
+        _mapper = mapper;
     }
 
-    public async Task<Guid> CreateMemberAsync(CreateMember newMember)
+    public async Task<Guid> CreateMemberAsync(Guid accessIdentifierId, MemberRequest memberRequest)
     {
-        var member = new Member(Guid.NewGuid(), new Name(newMember.Title, newMember.FirstName, newMember.MiddleName, newMember.LastName));
+        var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
 
-        if (!string.IsNullOrEmpty(newMember.Email))
+        var member = _mapper.Map<Member>(new MemberRequestWithId(memberRequest)
         {
-            member.SetContactEmail(newMember.Email);
-        }
+            Id = Guid.NewGuid()
+        });
 
-        _databaseContext.Members.Add(member);
+        accessIdentifier.Members.Add(member);
+
         await _databaseContext.SaveChangesAsync();
 
         return member.Id;
     }
 
-    public async Task<GetMember?> GetMemberAsync(Guid id)
+    public async Task<MemberResponse> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
     {
-        var member = await _databaseContext.Members
-           .Include(x => x.NextOfKins)
-           .FirstOrDefaultAsync(x => x.Id == id);
+        var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
+        var member = accessIdentifier.GetMember(memberId);
 
-        if (member == null)
-            return null;
-
-        return new GetMember
-        {
-            Id = member.Id,
-            Name = new Name(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname),
-            Contact = member.Contact == null ? null : new Contact(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber),
-            Vehicle = member.Vehicle == null ? null : new Vehicle(member.Vehicle.RegistrationNumber, member.Vehicle.Make, member.Vehicle.Model, member.Vehicle.Colour, member.Vehicle.Notes),
-            HasImage = member.HasImage,
-            DateOfBirth = member.DateOfBirth == null ? null : new DateOfBirth(member.DateOfBirth.Year, member.DateOfBirth.Month, member.DateOfBirth.Day),
-            NextOfKins = member.NextOfKins.Select(member => new NextOfKin(member.Id, new Name(member.Name.Title, member.Name.FirstName, member.Name.MiddleName, member.Name.Surname),
-            new ContactDetails(member.Contact.Email, member.Contact.HomeNumber, member.Contact.WorkNumber, member.Contact.MobileNumber), member.Relationship)).ToList(),
-            ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
-        };
+        return _mapper.Map<MemberResponse>(member);
+        // TODO do something with the images URL. That something probably doesn't belong here.
+        // ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
     }
 
-    public async Task<IEnumerable<GetMemberListItem>> GetListAsync(string? searchTerm = null)
+    public async Task<IEnumerable<MemberResponse>> GetMembersAsync(Guid accessIdentifierId, string? searchTerm)
     {
-        IEnumerable<Member> members = _databaseContext.Members;
+        var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
+
+        IEnumerable<Member> members = accessIdentifier.Members;
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             members = members.Where(u => u.Name.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || u.Name.Surname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
         }
 
-        return await Task.FromResult<IEnumerable<GetMemberListItem>>(members.Select(u => new GetMemberListItem
-        {
-            Id = u.Id,
-            Name = new Name(u.Name.Title, u.Name.FirstName, u.Name.MiddleName, u.Name.Surname),
-            DateOfBirth = u.DateOfBirth == null ? null : new DateOfBirth(u.DateOfBirth.Year, u.DateOfBirth.Month, u.DateOfBirth.Day),
-            KnownTown = u.Address?.Town,
-            HasImage = u.HasImage
-        }).ToList());
+        return _mapper.Map<IEnumerable<MemberResponse>>(members);
+    }
+
+    public Task ModifyMemberAsync(Guid accessIdentifierId, Guid memberId, MemberRequest memberRequest)
+    {
+        throw new NotImplementedException();
     }
 }

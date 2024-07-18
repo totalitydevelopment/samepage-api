@@ -6,12 +6,6 @@ namespace Nok.Infrastructure.Data;
 
 public class DatabaseContext : DbContext
 {
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-    {
-    }
-
-    public DbSet<Member> Members { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -25,4 +19,7 @@ public class DatabaseContext : DbContext
 
         return result;
     }
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+
+    public DbSet<AccessIdentifier> AccessIdentifiers { get; set; }
 }

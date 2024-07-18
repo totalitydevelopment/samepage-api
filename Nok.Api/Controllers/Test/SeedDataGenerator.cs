@@ -1,22 +1,20 @@
 ﻿using Bogus;
-using Nok.Core.Aggregates.Register;
-using Nok.Infrastructure.Data.Migrations;
+using Nok.Core.Models;
 
-namespace Nok.Infrastructure.Test.Database.Seeder;
+namespace Nok.Api.Controllers.Test;
 
 public class SeedDataGenerator
 {
-    public IReadOnlyCollection<Member> Members { get; } = [];
+    public IEnumerable<MemberRequest> Members { get; } = [];
 
     public SeedDataGenerator()
     {
         Members = GenerateMembers(amount: 1000);
     }
 
-    private static IReadOnlyCollection<Member> GenerateMembers(int amount)
+    private static IEnumerable<MemberRequest> GenerateMembers(int amount)
     {
-        var memberFaker = new Faker<Member>("en_GB")
-            .RuleFor(x => x.Id, f => f.Random.Uuid())
+        var memberFaker = new Faker<MemberRequest>("en_GB")
             .RuleFor(x => x.Name, f => f.NokName())
             .RuleFor(x => x.Address, f => f.NokAddress())
             .RuleFor(x => x.Contact, f => f.NokContactDetails())
@@ -30,9 +28,6 @@ public class SeedDataGenerator
         return members;
     }
 
-    private static T SeedRow<T>(Faker<T> faker, int rowId) where T : class
-    {
-        var recordRow = faker.UseSeed(rowId).Generate();
-        return recordRow;
-    }
+    private static T SeedRow<T>(Faker<T> faker, int rowId) where T : class =>
+        faker.UseSeed(rowId).Generate();
 }

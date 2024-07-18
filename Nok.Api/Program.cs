@@ -1,17 +1,17 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Nok.Core.Extensions;
-using Nok.Infrastructure.Data;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+using Nok.Api.Extensions;
 using Nok.Api.Models;
-using FluentValidation.AspNetCore;
-using Nok.Core.Interfaces;
-
+using Nok.Core.Extensions;
+using Nok.Core.Models.Profiles;
+using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
+using System.Net;
 
 namespace Nok.Api;
 
@@ -21,17 +21,20 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        // Adds Microsoft Identity platform (Azure AD B2C) support to protect this Api
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(options =>
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApi(jwtOptions =>
             {
-                builder.Configuration.Bind("AzureAdB2C", options);
-                options.TokenValidationParameters.NameClaimType = "name";
-            },
-            options =>
+                builder.Configuration.Bind("AzureAdB2C", jwtOptions);
+                jwtOptions.TokenValidationParameters.NameClaimType = "name";
+            }, msIdentityOptions =>
             {
-                builder.Configuration.Bind("AzureAdB2C", options);
+                builder.Configuration.Bind("AzureAdB2C", msIdentityOptions);
             });
+
+        builder.Services.AddAuthorization(options => options
+            .AddRequireScopePolicy("read:members", "app.members.read.all", "user.members.read")
+            .AddRequireScopePolicy("write:members", "user.members.write"));
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -56,8 +59,6 @@ public class Program
                 builder.Configuration.GetConnectionString("SqlConnection"),
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
-
-        builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(ApiProject)); });
 
         builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
         builder.Services.AddFluentValidationAutoValidation();
@@ -89,6 +90,12 @@ public class Program
             };
         });
 
+        builder.Services
+            .AddAutoMapper(typeof(CoreToDatabaseProfile))
+            .AddScoped<IAccessIdentifierService, AccessIdentifierService>()
+            .AddScoped<IMembersService, MembersService>()
+            .AddScoped<INextOfKinService, NextOfKinService>();
+
         var app = builder.Build();
 
         ConfigureSwaggerUi(builder, app);
@@ -97,6 +104,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
 
         app.Run();
     }
@@ -129,10 +137,7 @@ public class Program
                     {
                         AuthorizationUrl = new Uri(builder.Configuration["Swagger:AuthorizationUrl"]!),
                         TokenUrl = new Uri(builder.Configuration["Swagger:TokenUrl"]!),
-                        Scopes = new Dictionary<string, string>
-                        {
-                            [builder.Configuration["Swagger:ApiScope"]!] = "read the api",
-                        }
+                        Scopes = GetScopeDescriptions(builder.Configuration.GetSection("Swagger:ApiScopes").Get<List<string>>())
                     }
                 }
             });
@@ -144,7 +149,7 @@ public class Program
                     {
                         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
                     },
-                    new[] { builder.Configuration["Swagger:ApiScope"] }
+                    builder.Configuration.GetSection("Swagger:ApiScopes").Get<List<string>>()
                 }
             });
 
@@ -166,6 +171,18 @@ public class Program
                 }
             });
         });
+    }
+
+    private static IDictionary<string, string> GetScopeDescriptions(IEnumerable<string>? scopes)
+    {
+        var scopeDescriptions = new Dictionary<string, string>();
+
+        if (scopes is null)
+        {
+            return scopeDescriptions;
+        }
+
+        return scopes.ToDictionary(x => x, x => x.Substring(x.LastIndexOf('/') + 1));
     }
 
     private static void ConfigureSwaggerUi(WebApplicationBuilder builder, WebApplication app)

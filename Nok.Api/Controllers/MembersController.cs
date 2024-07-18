@@ -1,9 +1,9 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nok.Api.Extensions;
 using Nok.Api.Validators;
-using Nok.Core.Interfaces;
 using Nok.Core.Models;
+using Nok.Infrastructure.Services;
 
 namespace Nok.Api.Controllers;
 
@@ -14,52 +14,57 @@ public class MembersController : ControllerBase
 {
     private readonly ILogger<MembersController> _logger;
     private readonly IMembersService _membersService;
-    private readonly IMapper _mapper;
+    private readonly IAccessIdentifierService _accessIdentityService;
 
-    public MembersController(ILogger<MembersController> logger, IMembersService membersService, IMapper mapper)
+    public MembersController(
+        ILogger<MembersController> logger,
+        IAccessIdentifierService accessIdentityService,
+        IMembersService membersService)
     {
         _logger = logger;
         _membersService = membersService;
-        _mapper = mapper;
+        _accessIdentityService = accessIdentityService;
     }
 
     [HttpPost()]
+    [Authorize(Policy = "write:members")]
     [ModelValidator]
-    public async Task<ActionResult<Guid>> Post([FromBody] CreateMemberRequest newMember)
+    public async Task<ActionResult<Guid>> Post([FromBody] MemberRequest newMember)
     {
-        var memberId = await _membersService.CreateMemberAsync(new CreateMember(newMember.Title, newMember.FirstName, newMember.MiddleName, newMember.LastName, newMember.Email));
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        return memberId;
+        return Ok(await _membersService.CreateMemberAsync(accessIdentityId, newMember));
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<GetMemberResponse>> Get(Guid id)
+    [HttpGet("{memberId}")]
+    [Authorize(Policy = "read:members")]
+    public async Task<ActionResult<MemberResponse>> Get(Guid memberId)
     {
-        var member = await _membersService.GetMemberAsync(id);
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        if (member == null)
-        {
-            return NotFound();
-        }
+        // TODO handle member not found
 
-        return Ok(_mapper.Map<GetMemberResponse>(member));
+        return Ok(await _membersService.GetMemberAsync(accessIdentityId, memberId));
     }
 
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<GetMemberListItemResponse>>> GetListAsync([FromQuery] string? searchTerm = null)
+    [Authorize(Policy = "read:members")]
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> GetList([FromQuery] string? searchTerm = null)
     {
-        var members = await _membersService.GetListAsync(searchTerm);
+        var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
+            ?? throw new UnauthorizedAccessException());
 
-        if (members == null)
-        {
-            return NotFound();
-        }
+        // TODO handle member not found
 
-        return Ok(_mapper.Map<IEnumerable<GetMemberListItemResponse>>(members));
+        return Ok(await _membersService.GetMembersAsync(accessIdentityId, searchTerm));
+
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(Guid id, [FromBody] CreateMemberRequest updatedMember)
+    [Authorize(Policy = "write:members")]
+    public ActionResult Put(Guid id, [FromBody] MemberRequest updatedMember)
     {
         return NoContent();
     }
