@@ -1,6 +1,8 @@
-﻿namespace Nok.Core.Models;
+﻿using Nok.Core.Validators;
 
-public record NextOfKinRequest(NameDto Name, ContactDetailsDto Contact, AddressDto Address, string Relationship) : INextOfKin;
+namespace Nok.Core.Models;
+
+public record NextOfKinRequest(NameDto Name, ContactDetailsDto Contact, AddressDto Address, string Relationship) : BaseValidationModel<NextOfKinRequest>, INextOfKin;
 
 public record NextOfKinRequestWithId : NextOfKinRequest
 {

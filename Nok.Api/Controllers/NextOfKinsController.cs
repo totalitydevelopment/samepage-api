@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nok.Api.Extensions;
+using Nok.Core.Validators;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
 
@@ -30,6 +31,7 @@ public class NextOfKinsController : ControllerBase
 
     [HttpPost()]
     [Authorize(Policy = "write:members")]
+    [ModelValidator]
     public async Task<ActionResult<Guid>> Post([FromRoute] Guid memberId, [FromBody] Core.Models.NextOfKinRequest newNextOfKin)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
