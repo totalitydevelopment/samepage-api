@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Nok.Api.ExceptionFiltering;
 using Nok.Api.Extensions;
 using Nok.Core;
 using Nok.Core.Extensions;
@@ -37,7 +38,11 @@ public class Program
             .AddRequireScopePolicy("read:members", "app.members.read.all", "user.members.read")
             .AddRequireScopePolicy("write:members", "user.members.write"));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<HttpResponseExceptionFilter>();
+        });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
 
