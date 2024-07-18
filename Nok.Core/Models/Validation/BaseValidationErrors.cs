@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Nok.Api.Models;
+namespace Nok.Core.Models.Validation;
 
 public class BaseValidationErrors
 {

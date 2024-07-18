@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Nok.Api.Extensions;
-using Nok.Api.Models;
+using Nok.Core;
 using Nok.Core.Extensions;
 using Nok.Core.Models.Profiles;
+using Nok.Core.Models.Validation;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
 using System.Net;
@@ -60,7 +61,7 @@ public class Program
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
 
-        builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CoreProject>();
         builder.Services.AddFluentValidationAutoValidation();
 
         builder.Services.Configure<ApiBehaviorOptions>(options =>
