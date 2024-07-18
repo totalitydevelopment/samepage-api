@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nok.Api.Extensions;
-using Nok.Api.Validators;
 using Nok.Core.Models;
+using Nok.Core.Validators;
 using Nok.Infrastructure.Services;
 
 namespace Nok.Api.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("public/members")]
 public class MembersController : ControllerBase
 {

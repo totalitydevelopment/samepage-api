@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Nok.Api.ExceptionFiltering;
 using Nok.Api.Extensions;
-using Nok.Api.Models;
+using Nok.Core;
 using Nok.Core.Extensions;
 using Nok.Core.Models.Profiles;
+using Nok.Core.Models.Validation;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
 using System.Net;
@@ -36,7 +38,11 @@ public class Program
             .AddRequireScopePolicy("read:members", "app.members.read.all", "user.members.read")
             .AddRequireScopePolicy("write:members", "user.members.write"));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<HttpResponseExceptionFilter>();
+        });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
 
@@ -60,7 +66,7 @@ public class Program
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
 
-        builder.Services.AddValidatorsFromAssemblyContaining<ApiProject>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CoreProject>();
         builder.Services.AddFluentValidationAutoValidation();
 
         builder.Services.Configure<ApiBehaviorOptions>(options =>

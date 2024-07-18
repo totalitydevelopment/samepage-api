@@ -1,3 +1,5 @@
-﻿namespace Nok.Core.Models;
+﻿using Nok.Core.Validators;
 
-public record NameDto(string? Title, string FirstName, string? MiddleName, string Surname);
+namespace Nok.Core.Models;
+
+public record NameDto(string? Title, string FirstName, string? MiddleName, string Surname) : BaseValidationModelRecord<NameDto>;
