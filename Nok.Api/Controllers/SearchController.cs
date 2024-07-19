@@ -7,7 +7,7 @@ namespace Nok.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("public/search")]
+[Route("public")]
 public class SearchController : ControllerBase
 {
     private readonly ILogger<MembersController> _logger;
@@ -26,6 +26,7 @@ public class SearchController : ControllerBase
 
     [HttpGet()]
     [Authorize(Policy = "read:members:all")]
+    [Route("members/search")]
     public async Task<ActionResult<IEnumerable<Guid>>> GetList([FromQuery] string? searchTerm = null)
     {
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
