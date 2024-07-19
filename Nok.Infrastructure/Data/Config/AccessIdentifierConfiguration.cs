@@ -17,6 +17,7 @@ public class AccessIdentifierConfiguration : IEntityTypeConfiguration<AccessIden
         modelBuilder.Property(x => x.ClusterId).ValueGeneratedOnAdd();
         modelBuilder.Property(x => x.Id).ValueGeneratedNever();
         modelBuilder.Property(x => x.AzureOid).ValueGeneratedNever();
+        modelBuilder.Property(x => x.Type).IsRequired();
 
         modelBuilder.ToTable("AccessIdentifiers");
     }

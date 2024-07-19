@@ -36,6 +36,7 @@ public class Program
 
         builder.Services.AddAuthorization(options => options
             .AddRequireScopePolicy("read:members", "app.members.read.all", "user.members.read")
+            .AddRequireScopePolicy("read:members:all", "app.members.read.all")
             .AddRequireScopePolicy("write:members", "user.members.write"));
 
         builder.Services.AddControllers(options =>
