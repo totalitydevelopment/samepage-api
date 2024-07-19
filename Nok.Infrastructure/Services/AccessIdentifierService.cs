@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nok.Api.Extensions;
 using Nok.Core.Aggregates.Register;
 using Nok.Infrastructure.Data;
 using System.Security.Claims;

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Nok.Api.Extensions;
+namespace Nok.Infrastructure.Services;
 
 public static class ClaimExtensions
 {

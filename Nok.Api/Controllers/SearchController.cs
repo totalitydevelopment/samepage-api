@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nok.Api.Extensions;
 using Nok.Infrastructure.Services;
 
 namespace Nok.Api.Controllers;
