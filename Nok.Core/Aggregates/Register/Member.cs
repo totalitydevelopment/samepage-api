@@ -8,7 +8,7 @@ public class Member : Person
     public string? ImageUrl { get; private set; }
     public string? NationalInsuranceNumber { get; private set; }
 
-    public virtual IList<NextOfKin> NextOfKins { get; init; } = [];
+    public virtual IList<NextOfKin> NextOfKin { get; init; } = [];
 
     public void SetDateOfBirth(DateOfBirth dateOfBirth)
     {

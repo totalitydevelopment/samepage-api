@@ -45,7 +45,7 @@ public class MembersConfiguration : IEntityTypeConfiguration<Member>
             p.Property(pp => pp.Notes).HasColumnName("Vehicle_Notes").HasMaxLength(1000);
         });
 
-        modelBuilder.HasMany(e => e.NextOfKins).WithOne();
+        modelBuilder.HasMany(e => e.NextOfKin).WithOne();
 
         modelBuilder.Property(e => e.ImageUrl).HasMaxLength(50);
         modelBuilder.Property(e => e.NationalInsuranceNumber).HasMaxLength(20);

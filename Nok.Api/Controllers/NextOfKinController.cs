@@ -9,15 +9,15 @@ namespace Nok.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("members/{memberId}/next-of-kins")]
-public class NextOfKinsController : ControllerBase
+[Route("members/{memberId}/next-of-kin")]
+public class NextOfKinController : ControllerBase
 {
     private readonly ILogger<MembersController> _logger;
     private readonly DatabaseContext _databaseContext;
     private readonly IAccessIdentifierService _accessIdentityService;
     private readonly INextOfKinService _nextOfKinService;
 
-    public NextOfKinsController(
+    public NextOfKinController(
         ILogger<MembersController> logger,
         DatabaseContext databaseContext,
         IAccessIdentifierService accessIdentityService,

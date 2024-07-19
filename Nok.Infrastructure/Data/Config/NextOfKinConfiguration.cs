@@ -42,6 +42,6 @@ public class NextOfKinConfiguration : IEntityTypeConfiguration<NextOfKin>
         modelBuilder.Property(x => x.ClusterId).ValueGeneratedOnAdd();
         modelBuilder.Property(x => x.Id).ValueGeneratedNever();
 
-        modelBuilder.ToTable("NextOfKins");
+        modelBuilder.ToTable("NextOfKin");
     }
 }
