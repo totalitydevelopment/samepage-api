@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nok.Api.Extensions;
 using Nok.Core.Models;
 using Nok.Core.Validators;
 using Nok.Infrastructure.Services;

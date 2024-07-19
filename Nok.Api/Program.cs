@@ -13,6 +13,7 @@ using Nok.Core.Models.Profiles;
 using Nok.Core.Models.Validation;
 using Nok.Infrastructure.Data;
 using Nok.Infrastructure.Services;
+using Nok.Infrastructure.Services.Seeding;
 using System.Net;
 
 namespace Nok.Api;
@@ -101,7 +102,8 @@ public class Program
             .AddAutoMapper(typeof(CoreToDatabaseProfile))
             .AddScoped<IAccessIdentifierService, AccessIdentifierService>()
             .AddScoped<IMembersService, MembersService>()
-            .AddScoped<INextOfKinService, NextOfKinService>();
+            .AddScoped<INextOfKinService, NextOfKinService>()
+            .AddScoped<IDatabaseSeedingService, DatabaseSeedingService>();
 
         var app = builder.Build();
 
