@@ -34,12 +34,13 @@ public class MembersService : IMembersService
         return member.Id;
     }
 
-    public async Task<MemberResponse> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
+    public async Task<MemberResponse?> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
-        var member = accessIdentifier.GetMember(memberId);
 
-        return _mapper.Map<MemberResponse>(member);
+        var member = await accessIdentifier.GetMember(_databaseContext, memberId);
+
+        return _mapper.Map<MemberResponse?>(member);
         // TODO do something with the images URL. That something probably doesn't belong here.
         // ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
     }
@@ -66,6 +67,7 @@ public class MembersService : IMembersService
         // Only APIs should be able to read all members
         if (accessIdentifier.Type is not AccessIdentifierType.Api)
         {
+            // TODO Instead of empty return, consider calling GetMembersAsync(Guid accessIdentifierId, string? searchTerm)
             return [];
         }
 
