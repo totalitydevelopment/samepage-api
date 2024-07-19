@@ -16,10 +16,15 @@ public class NextOfKinService : INextOfKinService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateNextOfKinAsync(Guid accessIdentifierId, Guid memberId, NextOfKinRequest nextOfKinRequest)
+    public async Task<Guid?> CreateNextOfKinAsync(Guid accessIdentifierId, Guid memberId, NextOfKinRequest nextOfKinRequest)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
-        var member = accessIdentifier.GetMember(memberId);
+        var member = await accessIdentifier.GetMember(_databaseContext, memberId);
+
+        if (member is null)
+        {
+            return null;
+        }
 
         var nextOfKinRequestWithId = new NextOfKinRequestWithId(nextOfKinRequest)
         {
@@ -33,10 +38,15 @@ public class NextOfKinService : INextOfKinService
         return nextOfKin.Id;
     }
 
-    public async Task<NextOfKinResponse> GetNextOfKinAsync(Guid accessIdentifierId, Guid memberId, Guid nextOfKinId)
+    public async Task<NextOfKinResponse?> GetNextOfKinAsync(Guid accessIdentifierId, Guid memberId, Guid nextOfKinId)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
-        var member = accessIdentifier.GetMember(memberId);
+        var member = await accessIdentifier.GetMember(_databaseContext, memberId);
+
+        if (member is null)
+        {
+            return null;
+        }
 
         var nextOfKin = member.NextOfKins.FirstOrDefault(x => x.Id == nextOfKinId)
             ?? throw new InvalidOperationException($"Could not find {nameof(NextOfKin)}; {nextOfKinId}");
@@ -44,10 +54,15 @@ public class NextOfKinService : INextOfKinService
         return _mapper.Map<NextOfKinResponse>(nextOfKin);
     }
 
-    public async Task<IEnumerable<NextOfKinResponse>> GetNextOfKinAsync(Guid accessIdentifierId, Guid memberId)
+    public async Task<IEnumerable<NextOfKinResponse>?> GetNextOfKinAsync(Guid accessIdentifierId, Guid memberId)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
-        var member = accessIdentifier.GetMember(memberId);
+        var member = await accessIdentifier.GetMember(_databaseContext, memberId);
+
+        if (member is null)
+        {
+            return null;
+        }
 
         return _mapper.Map<IEnumerable<NextOfKinResponse>>(member.NextOfKins);
     }

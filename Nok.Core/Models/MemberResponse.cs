@@ -3,7 +3,6 @@
 public class MemberResponse : IMember
 {
     public required Guid Id { get; init; }
-    public IList<NextOfKinResponse> NextOfKin { get; init; } = [];
 
     public required NameDto Name { get; init; }
     public required ContactDetailsDto Contact { get; init; }

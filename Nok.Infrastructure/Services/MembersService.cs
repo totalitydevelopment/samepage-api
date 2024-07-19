@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Nok.Core.Aggregates.Register;
+using Nok.Core.Enums;
 using Nok.Core.Models;
 using Nok.Infrastructure.Data;
 
@@ -32,12 +34,13 @@ public class MembersService : IMembersService
         return member.Id;
     }
 
-    public async Task<MemberResponse> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
+    public async Task<MemberResponse?> GetMemberAsync(Guid accessIdentifierId, Guid memberId)
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
-        var member = accessIdentifier.GetMember(memberId);
 
-        return _mapper.Map<MemberResponse>(member);
+        var member = await accessIdentifier.GetMember(_databaseContext, memberId);
+
+        return _mapper.Map<MemberResponse?>(member);
         // TODO do something with the images URL. That something probably doesn't belong here.
         // ImageUrl = member.HasImage ? "https://noktemp.blob.core.windows.net/images/" + member.ImageUrl : string.Empty
     }
@@ -46,6 +49,7 @@ public class MembersService : IMembersService
     {
         var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
 
+        // TODO Consider using IEnumerable<Members> for AccessIdentifier and IEnumerable<NextOfKin> for Member
         IEnumerable<Member> members = accessIdentifier.Members;
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -54,6 +58,27 @@ public class MembersService : IMembersService
         }
 
         return _mapper.Map<IEnumerable<MemberResponse>>(members);
+    }
+
+    public async Task<IEnumerable<Guid>> GetAllMembersAsync(Guid accessIdentifierId, string? searchTerm)
+    {
+        var accessIdentifier = await _databaseContext.GetAccessIdentifierAsync(accessIdentifierId);
+
+        // Only APIs should be able to read all members
+        if (accessIdentifier.Type is not AccessIdentifierType.Api)
+        {
+            // TODO Instead of empty return, consider calling GetMembersAsync(Guid accessIdentifierId, string? searchTerm)
+            return [];
+        }
+
+        // This originally used `u.Name.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)`
+        // In some instances it was causing an exception with the message; "Translation of method 'string.Contains' failed."
+        // Using ToLower has solved this, unsure why, more info: https://github.com/dotnet/efcore/issues/18741
+        return await (string.IsNullOrWhiteSpace(searchTerm)
+            ? _databaseContext.Members
+            : _databaseContext.Members.Where(member => member.Name.FirstName.ToLower().Contains(searchTerm) || member.Name.Surname.ToLower().Contains(searchTerm)))
+                .Select(member => member.Id)
+                .ToListAsync();
     }
 
     public Task ModifyMemberAsync(Guid accessIdentifierId, Guid memberId, MemberRequest memberRequest)

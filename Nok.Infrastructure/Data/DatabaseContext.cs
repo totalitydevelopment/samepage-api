@@ -22,4 +22,5 @@ public class DatabaseContext : DbContext
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
     public DbSet<AccessIdentifier> AccessIdentifiers { get; set; }
+    public DbSet<Member> Members { get; set; }
 }

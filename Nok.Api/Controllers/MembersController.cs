@@ -44,9 +44,11 @@ public class MembersController : ControllerBase
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
 
-        // TODO handle member not found
+        var member = await _membersService.GetMemberAsync(accessIdentityId, memberId);
 
-        return Ok(await _membersService.GetMemberAsync(accessIdentityId, memberId));
+        return member is null
+             ? NotFound()
+             : Ok(member);
     }
 
     [HttpGet()]

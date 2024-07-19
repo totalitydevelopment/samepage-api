@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nok.Core.Aggregates.Register;
+using Nok.Core.Enums;
 using Nok.Infrastructure.Data;
 
 namespace Nok.Infrastructure.Services;
@@ -21,7 +22,11 @@ internal static class AccessIdentifierExtensions
         return accessIdentifier!;
     }
 
-    public static Member GetMember(this AccessIdentifier accessIdentifier, Guid memberId)
-        => accessIdentifier.Members.FirstOrDefault(x => x.Id == memberId)
-             ?? throw new InvalidOperationException($"Could not find {nameof(Member)}; {memberId}");
+    public static async Task<Member?> GetMember(this AccessIdentifier accessIdentifier, DatabaseContext databaseContext, Guid memberId) =>
+        accessIdentifier.Type is AccessIdentifierType.Api
+            ? await databaseContext.Members
+                .Include(x => x.NextOfKins)
+                .FirstOrDefaultAsync(x => x.Id == memberId)
+            : accessIdentifier.Members
+                .FirstOrDefault(x => x.Id == memberId);
 }

@@ -37,9 +37,11 @@ public class NextOfKinsController : ControllerBase
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
 
-        // TODO handle member not found
+        var nextOfKin = await _nextOfKinService.CreateNextOfKinAsync(accessIdentityId, memberId, newNextOfKin);
 
-        return Ok(await _nextOfKinService.CreateNextOfKinAsync(accessIdentityId, memberId, newNextOfKin));
+        return nextOfKin is null
+             ? NotFound()
+             : Ok(nextOfKin);
     }
 
     [HttpGet("{nextOfKinId}")]
@@ -49,10 +51,11 @@ public class NextOfKinsController : ControllerBase
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
 
-        // TODO handle member not found
-        // TODO handle nextOfKin not found
+        var nextOfKin = await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId, nextOfKinId);
 
-        return Ok(await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId, nextOfKinId));
+        return nextOfKin is null
+             ? NotFound()
+             : Ok(nextOfKin);
     }
 
     [HttpGet()]
@@ -62,8 +65,10 @@ public class NextOfKinsController : ControllerBase
         var accessIdentityId = await _accessIdentityService.GetOrCreateByClaimsAsync(HttpContext.User.Identity?.GetClaims()
             ?? throw new UnauthorizedAccessException());
 
-        // TODO handle member not found
+        var nextOfKin = await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId);
 
-        return Ok(await _nextOfKinService.GetNextOfKinAsync(accessIdentityId, memberId));
+        return nextOfKin is null
+             ? NotFound()
+             : Ok(nextOfKin);
     }
 }
