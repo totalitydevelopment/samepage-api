@@ -32,7 +32,7 @@ public class NextOfKinService : INextOfKinService
         };
 
         var nextOfKin = _mapper.Map<NextOfKin>(nextOfKinRequestWithId);
-        member.NextOfKins.Add(nextOfKin);
+        member.NextOfKin.Add(nextOfKin);
         await _databaseContext.SaveChangesAsync();
 
         return nextOfKin.Id;
@@ -48,8 +48,12 @@ public class NextOfKinService : INextOfKinService
             return null;
         }
 
-        var nextOfKin = member.NextOfKins.FirstOrDefault(x => x.Id == nextOfKinId)
-            ?? throw new InvalidOperationException($"Could not find {nameof(NextOfKin)}; {nextOfKinId}");
+        var nextOfKin = member.NextOfKin.FirstOrDefault(x => x.Id == nextOfKinId);
+
+        if (nextOfKin is null)
+        {
+            return null;
+        }
 
         return _mapper.Map<NextOfKinResponse>(nextOfKin);
     }
@@ -64,6 +68,6 @@ public class NextOfKinService : INextOfKinService
             return null;
         }
 
-        return _mapper.Map<IEnumerable<NextOfKinResponse>>(member.NextOfKins);
+        return _mapper.Map<IEnumerable<NextOfKinResponse>>(member.NextOfKin);
     }
 }
