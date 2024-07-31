@@ -1,7 +1,7 @@
-﻿using Nok.Core.Enums;
-using Nok.Core.Extensions;
+﻿using SamePage.Core.Enums;
+using SamePage.Core.Extensions;
 
-namespace Nok.Core.Aggregates.Register;
+namespace SamePage.Core.Aggregates.Register;
 
 public class AccessIdentifier : GuidDataEntity
 {

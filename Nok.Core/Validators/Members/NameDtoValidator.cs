@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Nok.Core.Models;
+using SamePage.Core.Models;
 
-namespace Nok.Core.Validators.Members;
+namespace SamePage.Core.Validators.Members;
 
 public class NameDtoValidator : AbstractValidator<NameDto>
 {

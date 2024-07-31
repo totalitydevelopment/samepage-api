@@ -1,4 +1,4 @@
-﻿namespace Nok.Core;
+﻿namespace SamePage.Core;
 
 public class CoreProject
 {

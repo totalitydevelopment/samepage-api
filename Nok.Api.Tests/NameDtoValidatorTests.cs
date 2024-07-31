@@ -1,8 +1,8 @@
 using FluentValidation.TestHelper;
-using Nok.Core.Models;
-using Nok.Core.Validators.Members;
+using SamePage.Core.Models;
+using SamePage.Core.Validators.Members;
 
-namespace Nok.Api.Tests.Validators.Members;
+namespace SamePage.Api.Tests.Validators.Members;
 
 [TestClass]
 public class NameDtoValidatorTests

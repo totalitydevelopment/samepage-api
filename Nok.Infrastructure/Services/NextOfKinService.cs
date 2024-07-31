@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Nok.Core.Aggregates.Register;
-using Nok.Core.Models;
-using Nok.Infrastructure.Data;
+using SamePage.Core.Aggregates.Register;
+using SamePage.Core.Models;
+using SamePage.Infrastructure.Data;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public class NextOfKinService : INextOfKinService
 {

@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Aggregates.Register;
+﻿namespace SamePage.Core.Aggregates.Register;
 
 public class Member : Person
 {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Nok.Core.Events;
+namespace SamePage.Core.Events;
 
 public abstract class DomainEventBase : INotification
 {

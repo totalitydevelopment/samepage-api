@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public interface IAccessIdentifierService
 {

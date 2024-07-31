@@ -1,8 +1,8 @@
 ﻿using Bogus;
 using Bogus.Extensions.UnitedKingdom;
-using Nok.Core.Aggregates.Register;
+using SamePage.Core.Aggregates.Register;
 
-namespace Nok.Infrastructure.Services.Seeding;
+namespace SamePage.Infrastructure.Services.Seeding;
 
 internal static class BogusExtensions
 {

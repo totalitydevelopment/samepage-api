@@ -1,6 +1,6 @@
-﻿using Nok.Core.Extensions;
+﻿using SamePage.Core.Extensions;
 
-namespace Nok.Core.Aggregates.Register;
+namespace SamePage.Core.Aggregates.Register;
 
 public abstract class Person : GuidDataEntity
 {

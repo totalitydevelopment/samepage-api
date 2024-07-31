@@ -1,8 +1,8 @@
-﻿using Nok.Core.Events;
-using Nok.Core.Extensions;
+﻿using SamePage.Core.Events;
+using SamePage.Core.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Nok.Core.Aggregates;
+namespace SamePage.Core.Aggregates;
 
 public abstract class BaseEntity<TId> : BaseAudit, IBaseEntity
 {

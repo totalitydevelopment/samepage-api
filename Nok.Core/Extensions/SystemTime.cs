@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Extensions;
+﻿namespace SamePage.Core.Extensions;
 
 public static class SystemTime
 {

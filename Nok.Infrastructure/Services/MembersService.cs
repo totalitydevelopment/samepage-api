@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
-using Nok.Core.Enums;
-using Nok.Core.Models;
-using Nok.Infrastructure.Data;
+using SamePage.Core.Aggregates.Register;
+using SamePage.Core.Enums;
+using SamePage.Core.Models;
+using SamePage.Infrastructure.Data;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public class MembersService : IMembersService
 {

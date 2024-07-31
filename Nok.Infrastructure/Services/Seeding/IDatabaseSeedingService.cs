@@ -1,4 +1,4 @@
-﻿namespace Nok.Infrastructure.Services.Seeding;
+﻿namespace SamePage.Infrastructure.Services.Seeding;
 
 public interface IDatabaseSeedingService
 {

@@ -9,6 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Applications\**" />
+    <Compile Remove="Controllers\Public\**" />
+    <Content Remove="Controllers\Applications\**" />
+    <Content Remove="Controllers\Public\**" />
+    <EmbeddedResource Remove="Controllers\Applications\**" />
+    <EmbeddedResource Remove="Controllers\Public\**" />
+    <None Remove="Controllers\Applications\**" />
+    <None Remove="Controllers\Public\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.20.0" />
@@ -16,12 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nok.Infrastructure\Nok.Infrastructure.csproj" />
+    <ProjectReference Include="..\Nok.Infrastructure\SamePage.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Applications\" />
-    <Folder Include="Controllers\Public\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

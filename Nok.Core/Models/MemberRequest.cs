@@ -1,6 +1,6 @@
-﻿using Nok.Core.Validators;
+﻿using SamePage.Core.Validators;
 
-namespace Nok.Core.Models;
+namespace SamePage.Core.Models;
 
 public record MemberRequest(NameDto Name, ContactDetailsDto Contact, VehicleDto Vehicle, DateOfBirthDto DateOfBirth, AddressDto Address, string? ImageUrl)
     : BaseValidationModel<MemberRequest>, IMember;

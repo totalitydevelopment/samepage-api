@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nok.Core.Models;
-using Nok.Core.Validators;
-using Nok.Infrastructure.Services;
+using SamePage.Core.Models;
+using SamePage.Core.Validators;
+using SamePage.Infrastructure.Services;
 
-namespace Nok.Api.Controllers;
+namespace SamePage.Api.Controllers;
 
 [ApiController]
 [Authorize]

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nok.Api\Nok.Api.csproj" />
+    <ProjectReference Include="..\Nok.Api\SamePage.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

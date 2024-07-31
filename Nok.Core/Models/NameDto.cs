@@ -1,5 +1,5 @@
-﻿using Nok.Core.Validators;
+﻿using SamePage.Core.Validators;
 
-namespace Nok.Core.Models;
+namespace SamePage.Core.Models;
 
 public record NameDto(string? Title, string FirstName, string? MiddleName, string Surname) : BaseValidationModelRecord<NameDto>;

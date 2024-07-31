@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Enums;
+﻿namespace SamePage.Core.Enums;
 
 public enum AccessIdentifierType
 {

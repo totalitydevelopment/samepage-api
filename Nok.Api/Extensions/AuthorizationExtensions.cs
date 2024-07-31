@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Nok.Api.Extensions;
+namespace SamePage.Api.Extensions;
 
 public static class AuthorizationExtensions
 {

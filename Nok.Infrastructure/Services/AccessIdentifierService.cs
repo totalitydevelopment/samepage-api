@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
-using Nok.Infrastructure.Data;
+using SamePage.Core.Aggregates.Register;
+using SamePage.Infrastructure.Data;
 using System.Security.Claims;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public class AccessIdentifierService : IAccessIdentifierService
 {

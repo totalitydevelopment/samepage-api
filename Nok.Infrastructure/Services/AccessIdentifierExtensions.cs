@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
-using Nok.Core.Enums;
-using Nok.Infrastructure.Data;
+using SamePage.Core.Aggregates.Register;
+using SamePage.Core.Enums;
+using SamePage.Infrastructure.Data;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 internal static class AccessIdentifierExtensions
 {

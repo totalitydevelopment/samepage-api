@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Models;
+﻿namespace SamePage.Core.Models;
 
 public interface IMember
 {

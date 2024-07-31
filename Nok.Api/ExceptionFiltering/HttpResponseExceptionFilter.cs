@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace Nok.Api.ExceptionFiltering;
+namespace SamePage.Api.ExceptionFiltering;
 
 public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
 {

@@ -1,4 +1,4 @@
-﻿namespace Nok.Infrastructure.Data.Config;
+﻿namespace SamePage.Infrastructure.Data.Config;
 
 public static class DataSchemaConstants
 {

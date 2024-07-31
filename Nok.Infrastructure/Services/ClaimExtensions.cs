@@ -1,8 +1,8 @@
-﻿using Nok.Core.Enums;
+﻿using SamePage.Core.Enums;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public static class ClaimExtensions
 {

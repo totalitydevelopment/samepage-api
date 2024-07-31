@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Nok.Core.Aggregates.Register;
+using SamePage.Core.Aggregates.Register;
 
-namespace Nok.Core.Models.Profiles;
+namespace SamePage.Core.Models.Profiles;
 
 public class CoreToDatabaseProfile : Profile
 {

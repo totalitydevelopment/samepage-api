@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nok.Core.Aggregates.Register;
+using SamePage.Core.Aggregates.Register;
 using System.Reflection;
 
-namespace Nok.Infrastructure.Data;
+namespace SamePage.Infrastructure.Data;
 
 public class DatabaseContext : DbContext
 {

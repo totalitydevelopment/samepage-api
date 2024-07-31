@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nok.Infrastructure.Services;
+using SamePage.Infrastructure.Services;
 
-namespace Nok.Api.Controllers;
+namespace SamePage.Api.Controllers;
 
 [ApiController]
 [Authorize]

@@ -1,6 +1,6 @@
-﻿using Nok.Core.Models;
+﻿using SamePage.Core.Models;
 
-namespace Nok.Infrastructure.Services;
+namespace SamePage.Infrastructure.Services;
 
 public interface IMembersService
 {

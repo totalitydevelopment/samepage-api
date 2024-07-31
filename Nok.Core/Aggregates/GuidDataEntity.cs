@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Aggregates;
+﻿namespace SamePage.Core.Aggregates;
 
 public abstract class GuidDataEntity : BaseEntity<Guid>
 {

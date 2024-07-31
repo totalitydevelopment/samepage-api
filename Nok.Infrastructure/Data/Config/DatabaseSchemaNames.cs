@@ -1,4 +1,4 @@
-﻿namespace Nok.Infrastructure.Data.Config;
+﻿namespace SamePage.Infrastructure.Data.Config;
 
 internal class DatabaseSchemaNames
 {

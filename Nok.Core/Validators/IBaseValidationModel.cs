@@ -1,4 +1,4 @@
-﻿namespace Nok.Core.Validators;
+﻿namespace SamePage.Core.Validators;
 
 public interface IBaseValidationModel
 {

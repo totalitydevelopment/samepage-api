@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Nok.Api.ExceptionFiltering;
-using Nok.Api.Extensions;
-using Nok.Core;
-using Nok.Core.Extensions;
-using Nok.Core.Models.Profiles;
-using Nok.Core.Models.Validation;
-using Nok.Infrastructure.Data;
-using Nok.Infrastructure.Services;
-using Nok.Infrastructure.Services.Seeding;
+using SamePage.Api.ExceptionFiltering;
+using SamePage.Api.Extensions;
+using SamePage.Core;
+using SamePage.Core.Extensions;
+using SamePage.Core.Models.Profiles;
+using SamePage.Core.Models.Validation;
+using SamePage.Infrastructure.Data;
+using SamePage.Infrastructure.Services;
+using SamePage.Infrastructure.Services.Seeding;
 using System.Net;
 
-namespace Nok.Api;
+namespace SamePage.Api;
 
 public class Program
 {
@@ -122,7 +122,7 @@ public class Program
     {
         builder.Services.AddSwaggerGen(opt =>
         {
-            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "nok", Version = "v1" });
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Same Page", Version = "v1" });
 
             opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -201,7 +201,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "nok v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SamePage v1");
                 c.OAuthClientId(builder.Configuration["Swagger:OpenIdClientId"]);
                 c.OAuthUsePkce();
                 c.OAuthScopeSeparator(" ");

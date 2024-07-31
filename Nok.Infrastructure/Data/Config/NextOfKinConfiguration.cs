@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nok.Core.Aggregates.Register;
+using SamePage.Core.Aggregates.Register;
 
-namespace Nok.Infrastructure.Data.Config;
+namespace SamePage.Infrastructure.Data.Config;
 
 public class NextOfKinConfiguration : IEntityTypeConfiguration<NextOfKin>
 {

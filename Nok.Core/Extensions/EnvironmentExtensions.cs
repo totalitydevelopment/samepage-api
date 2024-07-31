@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace Nok.Core.Extensions;
+namespace SamePage.Core.Extensions;
 
 public static class EnvironmentExtensions
 {

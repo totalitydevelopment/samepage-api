@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Moq;
-using Nok.Core.Models;
-using Nok.Core.Validators;
-using Nok.Core.Validators.Members;
+using SamePage.Core.Models;
+using SamePage.Core.Validators;
+using SamePage.Core.Validators.Members;
 
-namespace Nok.Api.Tests.Validators.Members;
+namespace SamePage.Api.Tests.Validators.Members;
 
 [TestClass]
 public class ModelValidatorAttributeTests

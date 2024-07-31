@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Nok.Core.Validators;
+namespace SamePage.Core.Validators;
 
 public class ModelValidatorAttribute : ActionFilterAttribute
 {

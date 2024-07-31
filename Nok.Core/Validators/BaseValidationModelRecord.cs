@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Nok.Core.Validators;
+namespace SamePage.Core.Validators;
 
 public abstract record BaseValidationModelRecord<T> : IBaseValidationModel
 {

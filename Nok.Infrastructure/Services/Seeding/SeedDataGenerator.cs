@@ -1,7 +1,7 @@
 ﻿using Bogus;
-using Nok.Core.Aggregates.Register;
+using SamePage.Core.Aggregates.Register;
 
-namespace Nok.Infrastructure.Services.Seeding;
+namespace SamePage.Infrastructure.Services.Seeding;
 
 public class SeedDataGenerator
 {

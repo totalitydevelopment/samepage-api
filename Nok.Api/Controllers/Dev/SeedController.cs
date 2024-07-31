@@ -1,11 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nok.Core.Extensions;
-using Nok.Infrastructure.Services;
-using Nok.Infrastructure.Services.Seeding;
+using SamePage.Core.Extensions;
+using SamePage.Infrastructure.Services;
+using SamePage.Infrastructure.Services.Seeding;
 
-namespace Nok.Api.Controllers.Dev;
+namespace SamePage.Api.Controllers.Dev;
 
 [ApiController]
 [Authorize]

@@ -1,7 +1,7 @@
 ﻿
-using Nok.Infrastructure.Data;
+using SamePage.Infrastructure.Data;
 
-namespace Nok.Infrastructure.Services.Seeding;
+namespace SamePage.Infrastructure.Services.Seeding;
 
 public class DatabaseSeedingService : IDatabaseSeedingService
 {
