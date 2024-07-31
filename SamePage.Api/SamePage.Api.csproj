@@ -27,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nok.Infrastructure\SamePage.Infrastructure.csproj" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\SamePage.Infrastructure\SamePage.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

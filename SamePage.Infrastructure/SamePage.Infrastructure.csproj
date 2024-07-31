@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nok.Core\SamePage.Core.csproj" />
+    <ProjectReference Include="..\SamePage.Core\SamePage.Core.csproj" />
   </ItemGroup>
 
 </Project>
