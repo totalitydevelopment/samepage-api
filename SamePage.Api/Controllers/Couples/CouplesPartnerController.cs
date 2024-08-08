@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SamePage.Api.Controllers.Couples;
 
 [ApiController]
-[Route("couples/{coupleId}/persons")]
+[Route("couples/{coupleId}/partners")]
 public class CouplesPartnerController : ControllerBase
 {
     public CouplesPartnerController()
@@ -59,7 +59,7 @@ public class CouplesPartnerController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<ActionResult<dynamic>> Post()
+    public async Task<ActionResult<dynamic>> Post(dynamic partner)
     {
         return Ok(Guid.NewGuid());
     }

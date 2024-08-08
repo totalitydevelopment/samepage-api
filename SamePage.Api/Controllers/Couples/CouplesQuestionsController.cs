@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SamePage.Api.Controllers.Couples;
 
 [ApiController]
-[Route("couples/{coupleId}/persons/{personId}/questions")]
+[Route("couples/{coupleId}/sections/{sectionId}/questions")]
 public class CouplesQuestionsController : ControllerBase
 {
     public CouplesQuestionsController()
@@ -13,11 +13,6 @@ public class CouplesQuestionsController : ControllerBase
     [HttpGet()]
     public async Task<ActionResult<dynamic>> GetList()
     {
-        // I need a respone object that will contain the following:
-        // - A list of questions
-        // - A list of answers
-        // - A list of comments
-
         var response = new
         {
             Questions = new List<dynamic>
@@ -71,5 +66,11 @@ public class CouplesQuestionsController : ControllerBase
         };
 
         return Ok(response);
+    }
+
+    [HttpPut()]
+    public async Task<ActionResult<dynamic>> Post(dynamic answers)
+    {
+        return NoContent();
     }
 }
