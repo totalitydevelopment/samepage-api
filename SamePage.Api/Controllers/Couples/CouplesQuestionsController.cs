@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SamePage.Api.Controllers;
+namespace SamePage.Api.Controllers.Couples;
 
 [ApiController]
-[Route("questions")]
-public class QuestionsController : ControllerBase
+[Route("couples/{coupleId}/persons/{personId}/questions")]
+public class CouplesQuestionsController : ControllerBase
 {
-    public QuestionsController()
+    public CouplesQuestionsController()
     {
     }
 
